@@ -9,7 +9,8 @@ const {
   text = 'Call or send a request. You get a straight answer and a price before any work starts.',
   photo = 'furnaceCoil',
 } = Astro.props;
-const p = photo in photos ? photos[photo as PhotoKey] : photos.furnaceCoil;
+const pick = photo in photos ? photos[photo as PhotoKey] : null;
+const p = pick && pick.src.width >= 1200 ? pick : photos.furnaceCoil;
 ---
 <section class="on-dark relative isolate overflow-hidden bg-teal-900 text-white">
   <Image src={p.src} alt="" widths={[640, 1024, 1600]} sizes="100vw" class="absolute inset-0 -z-10 h-full w-full object-cover opacity-25" loading="lazy" />

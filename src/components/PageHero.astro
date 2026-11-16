@@ -5,7 +5,9 @@ import { photos, type PhotoKey, type PhotoNeed } from '../data/photos';
 import Icon from './Icon.astro';
 interface Props { eyebrow?: string; h1: string; sub: string; photo?: PhotoKey | PhotoNeed; ctas?: boolean }
 const { eyebrow, h1, sub, photo = 'furnaceCoil', ctas = true } = Astro.props;
-const img = photo in photos ? photos[photo as PhotoKey] : photos.furnaceCoil;
+// Full-bleed backgrounds need a wide source; small photos fall back to the default shot.
+const pick = photo in photos ? photos[photo as PhotoKey] : null;
+const img = pick && pick.src.width >= 1200 ? pick : photos.furnaceCoil;
 ---
 <section class="on-dark relative isolate overflow-hidden bg-teal-900 text-white">
   <Image
