@@ -21,7 +21,7 @@ interface Props { a: Area }
 const { a } = Astro.props;
 const url = `${SITE_URL}/service-areas/${a.slug}/`;
 const more = areaExtra[a.slug];
-const groups = mainNav.filter((g) => g.children);
+const groups = mainNav.filter((g) => g.children && g.href !== '/service-areas/');
 const nearby = a.nearby.map((s) => areas.find((x) => x.slug === s)!).filter(Boolean);
 const placeNode = {
   '@type': 'Place',

@@ -5,7 +5,7 @@ import { business } from '../data/business';
 import { mainNav, companyLinks } from '../data/nav';
 import { cityList, cityHref } from '../data/areas-list';
 import Icon from './Icon.astro';
-const groups = mainNav.filter((g) => g.children);
+const groups = mainNav.filter((g) => g.children && g.href !== '/service-areas/');
 const year = new Date().getFullYear();
 const socials = [
   { name: 'Facebook', href: business.social.facebook, icon: 'facebook' as const },

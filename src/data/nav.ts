@@ -1,3 +1,5 @@
+import { cityList, cityHref } from './areas-list';
+
 export interface NavLink { label: string; href: string }
 export interface NavGroup extends NavLink { children?: NavLink[] }
 
@@ -53,6 +55,11 @@ export const mainNav: NavGroup[] = [
       { label: 'Commercial Indoor Air Quality', href: '/commercial/indoor-air-quality/' },
       { label: 'Commercial Maintenance Plans', href: '/commercial/maintenance-plans/' },
     ],
+  },
+  {
+    label: 'Service Areas',
+    href: '/service-areas/',
+    children: cityList.map((c) => ({ label: `${c.name}, UT`, href: cityHref(c.slug) })),
   },
   { label: 'Coupons', href: '/coupons/' },
   { label: 'Blogs', href: '/blog/' },
