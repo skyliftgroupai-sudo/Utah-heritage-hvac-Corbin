@@ -1,0 +1,68 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import CTABand from '../../components/CTABand.astro';
+import { catLabels, type BlogCat } from '../../data/blog';
+import { SITE_URL } from '../../data/business';
+
+const posts = (await getCollection('blog')).sort((a, b) => b.data.pubDate.localeCompare(a.data.pubDate));
+const cats = Object.keys(catLabels) as BlogCat[];
+const counts = Object.fromEntries(cats.map((c) => [c, posts.filter((p) => p.data.category === c).length]));
+const list = {
+  '@type': 'ItemList',
+  '@id': `${SITE_URL}/blog/#list`,
+  itemListElement: posts.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE_URL}/blog/${p.id}/`, name: p.data.title })),
+};
+---
+<BaseLayout
+  title="HVAC Tips for Southern Utah | Utah Heritage HVAC Blog"
+  description="Plain-spoken HVAC advice for St. George and Cedar City homeowners: maintenance timing, repair vs. replacement and what our climate does to equipment."
+  crumbs={[{ label: 'Blog', href: '/blog/' }]}
+  schema={[list]}
+  pageType="CollectionPage"
+>
+  <section class="paper border-b border-line">
+    <div class="wrap py-12">
+      <p class="eyebrow">The Utah Heritage HVAC blog</p>
+      <h1 class="mt-2">HVAC Tips for St. George &amp; Cedar City Homeowners</h1>
+      <p class="mt-4 max-w-2xl text-lg text-ink-soft">Written by owner Corbin Allen. Practical answers based on what actually happens to heating and cooling systems in Southern Utah, not national averages.</p>
+    </div>
+  </section>
+
+  <section class="section bg-white !pt-10">
+    <div class="wrap blog-filter">
+      <fieldset>
+        <legend class="font-display text-lg font-bold uppercase tracking-wide text-teal">Filter by topic</legend>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <input type="radio" name="cat" id="f-all" class="peer/all sr-only" checked />
+          <label for="f-all" class="chip">All ({posts.length})</label>
+          {cats.map((c) => (
+            <>
+              <input type="radio" name="cat" id={`f-${c}`} class="sr-only" />
+              <label for={`f-${c}`} class="chip">{catLabels[c]} ({counts[c]})</label>
+            </>
+          ))}
+        </div>
+      </fieldset>
+      <div class="posts mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {posts.map((p) => <PostCard post={p} headingLevel="h2" />)}
+      </div>
+      <p class="empty mt-6 hidden text-ink-soft">No articles in this topic yet. Commercial HVAC articles are coming soon. In the meantime, see our <a href="/commercial/" class="link">commercial HVAC services</a>.</p>
+    </div>
+  </section>
+  <CTABand />
+</BaseLayout>
+
+<style>
+  @reference "../../styles/global.css";
+  .chip { @apply cursor-pointer rounded-md border-2 border-teal px-4 py-1.5 font-display text-base font-semibold uppercase tracking-wide text-teal; }
+  input:checked + .chip { @apply bg-teal text-white; }
+  input:focus-visible + .chip { outline: 3px solid var(--color-rust); outline-offset: 2px; }
+  .blog-filter:has(#f-ac:checked) .posts > :not([data-cat='ac']),
+  .blog-filter:has(#f-heating:checked) .posts > :not([data-cat='heating']),
+  .blog-filter:has(#f-maintenance:checked) .posts > :not([data-cat='maintenance']),
+  .blog-filter:has(#f-commercial:checked) .posts > :not([data-cat='commercial']) { display: none; }
+  .blog-filter:has(#f-commercial:checked) .empty,
+  .blog-filter:has(#f-heating:checked) .empty { display: block; }
+</style>

@@ -1,0 +1,130 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import FAQ from '../components/FAQ.astro';
+import CTABand from '../components/CTABand.astro';
+import ContactForm from '../components/ContactForm.astro';
+import ReviewCards from '../components/ReviewCards.astro';
+import OfferStrip from '../components/OfferStrip.astro';
+import Photo from '../components/Photo.astro';
+import Icon from '../components/Icon.astro';
+import { mainNav } from '../data/nav';
+import { areas } from '../data/areas';
+import { coupons } from '../data/coupons';
+import { SITE_URL, LAST_UPDATED, formatDate, business } from '../data/business';
+import { md } from '../lib/md';
+import { areaExtra } from '../data/extra-copy';
+import { faqNode, BUSINESS_ID } from '../lib/schema';
+import type { Area } from '../data/types';
+
+interface Props { a: Area }
+const { a } = Astro.props;
+const url = `${SITE_URL}/service-areas/${a.slug}/`;
+const more = areaExtra[a.slug];
+const groups = mainNav.filter((g) => g.children);
+const nearby = a.nearby.map((s) => areas.find((x) => x.slug === s)!).filter(Boolean);
+const placeNode = {
+  '@type': 'Place',
+  '@id': `${url}#place`,
+  name: `${a.name}, Utah`,
+  geo: { '@type': 'GeoCoordinates', latitude: a.geo.lat, longitude: a.geo.lng },
+  containedInPlace: { '@type': 'AdministrativeArea', name: `${a.county}, Utah` },
+};
+const serviceArea = {
+  '@type': 'Service',
+  '@id': `${url}#service`,
+  name: `HVAC service in ${a.name}, UT`,
+  serviceType: 'HVAC repair, installation and maintenance',
+  provider: { '@id': BUSINESS_ID },
+  areaServed: { '@id': `${url}#place` },
+};
+---
+<BaseLayout
+  title={a.title}
+  description={a.meta}
+  crumbs={[{ label: 'Service Areas', href: '/service-areas/' }, { label: a.name, href: `/service-areas/${a.slug}/` }]}
+  schema={[placeNode, serviceArea, faqNode(url, a.faqs)]}
+>
+  <PageHero eyebrow={`${a.county} · Utah`} h1={a.h1} sub={a.sub} photo={a.photo} />
+
+  <section class="section bg-white">
+    <div class="wrap grid gap-10 lg:grid-cols-[1.3fr_1fr]">
+      <div>
+        <div class="rule-top paper rounded-md p-6">
+          <p class="eyebrow">Quick answer</p>
+          <p class="mt-2 text-lg leading-relaxed">{a.quickAnswer}</p>
+        </div>
+        <div class="prose-uh mt-8">{a.intro.map((p) => <p set:html={md(p)} />)}</div>
+      </div>
+      <aside class="h-fit rounded-md border-2 border-teal p-6">
+        <h2 class="text-3xl">HVAC Help in {a.name}</h2>
+        <ul class="check-list mt-4 space-y-2">
+          {['No travel fees', 'Upfront pricing before work', 'Same-day service when available', business.emergencyLine, 'Licensed & insured'].map((t) => <li>{t}</li>)}
+        </ul>
+        <a href={business.phoneHref} class="btn btn-rust mt-5 w-full" data-call><Icon name="phone" size={20} />{business.phone}</a>
+        <a href="#request" class="btn btn-outline mt-3 w-full">Request Service</a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="paper section">
+    <div class="wrap grid gap-10 lg:grid-cols-2 lg:items-center">
+      <div>
+        <h2>{a.climateHeading}</h2>
+        <div class="prose-uh mt-5">{a.climate.map((p) => <p set:html={md(p)} />)}</div>
+      </div>
+      <Photo name={a.photo} />
+    </div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="wrap">
+      <h2>{a.homesHeading}</h2>
+      <div class="prose-uh mt-5 max-w-3xl">{a.homes.map((p) => <p set:html={md(p)} />)}</div>
+      {more && (<><h2 class="mt-12">{more.heading}</h2><div class="prose-uh mt-5 max-w-3xl">{more.body.map((p) => <p set:html={md(p)} />)}</div></>)}
+    </div>
+  </section>
+
+  <section class="paper section">
+    <div class="wrap">
+      <h2>HVAC Services in {a.name}, UT</h2>
+      <p class="mt-3 max-w-3xl text-ink-soft">{a.servicesNote}</p>
+      <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        {groups.map((g) => (
+          <div class="rounded-md border border-line bg-white p-5">
+            <h3><a href={g.href} class="no-underline hover:text-rust-dark">{g.label}</a></h3>
+            <ul class="mt-3 space-y-1.5 text-[0.98rem]">
+              {g.children!.filter((c) => !c.href.endsWith('/faqs/')).map((c) => <li><a href={c.href} class="text-ink-soft no-underline hover:text-rust-dark hover:underline">{c.label}</a></li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <OfferStrip items={coupons.slice(0, 3)} heading={`Specials for ${a.name} Customers`} />
+
+  <section class="section bg-white">
+    <div class="wrap"><ReviewCards limit={3} heading="Reviews From Southern Utah Customers" /></div>
+  </section>
+
+  <CTABand heading={`Need HVAC help in ${a.name}?`} photo={a.photo} />
+
+  <section class="section bg-white">
+    <div class="wrap max-w-4xl"><FAQ faqs={a.faqs} heading={`HVAC Questions From ${a.name} Homeowners`} /></div>
+  </section>
+
+  <section class="paper section">
+    <div class="wrap grid gap-12 lg:grid-cols-[1fr_1.5fr]">
+      <div>
+        <h2>Nearby Areas We Serve</h2>
+        <ul class="mt-5 space-y-2">
+          {nearby.map((n) => <li><a href={`/service-areas/${n.slug}/`} class="link">HVAC service in {n.name}, UT</a></li>)}
+          <li><a href="/service-areas/" class="link">All service areas</a></li>
+        </ul>
+        <p class="mt-8 text-sm text-ink-soft">Last updated: <time datetime={LAST_UPDATED}>{formatDate(LAST_UPDATED)}</time></p>
+      </div>
+      <div class="rounded-md bg-white p-6"><ContactForm heading={`Request Service in ${a.name}`} /></div>
+    </div>
+  </section>
+</BaseLayout>

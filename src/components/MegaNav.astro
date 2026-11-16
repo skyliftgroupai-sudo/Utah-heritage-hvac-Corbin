@@ -1,0 +1,122 @@
+---
+import { mainNav } from '../data/nav';
+import { business } from '../data/business';
+import Icon from './Icon.astro';
+const blurbs: Record<string, string> = {
+  'Air Conditioning': 'Repairs, new systems and tune-ups for St. George heat.',
+  Heating: 'Furnaces and heat pumps for Cedar City cold and mild St. George winters.',
+  'Maintenance Plan': 'Two visits a year. Spring for cooling, fall for heating.',
+  Commercial: 'Rooftop units, offices, shops and multi-unit buildings.',
+};
+const current = Astro.url.pathname;
+---
+<nav aria-label="Main" class="hidden lg:block">
+  <ul class="flex items-stretch">
+    {mainNav.map((item, i) => {
+      const active = current === item.href || (item.children && current.startsWith(item.href));
+      return item.children ? (
+        <li class="dd relative flex items-stretch" data-dd>
+          <div class="flex items-center">
+            <a
+              href={item.href}
+              class:list={['dd-link flex h-full items-center py-6 pl-2.5 pr-1 font-display text-[1.06rem] font-bold uppercase tracking-wide text-white no-underline hover:text-sand xl:pl-3.5', active && 'text-sand']}
+              aria-current={current === item.href ? 'page' : undefined}
+            >{item.label}</a>
+            <button
+              type="button"
+              class="dd-toggle -ml-0.5 mr-1 flex h-8 w-6 items-center justify-center rounded-sm text-rust hover:text-sand"
+              aria-expanded="false"
+              aria-controls={`dd-${i}`}
+              aria-label={`${item.label} submenu`}
+            ><Icon name="caret" size={16} class="text-[#e07a4f]" /></button>
+          </div>
+          <div id={`dd-${i}`} class="dd-panel absolute left-0 top-full z-50 w-[560px] border-t-4 border-rust bg-white shadow-[0_10px_24px_-12px_rgba(0,0,0,.35)]">
+            <div class="grid grid-cols-[1fr_200px]">
+              <ul class="py-3">
+                <li>
+                  <a href={item.href} class="block px-5 py-2 font-display text-base font-bold uppercase tracking-wide text-teal no-underline hover:bg-cream">
+                    All {item.label} Services
+                  </a>
+                </li>
+                {item.children.map((c) => (
+                  <li>
+                    <a
+                      href={c.href}
+                      class:list={['block px-5 py-1.5 text-[1rem] leading-snug text-ink no-underline hover:bg-cream hover:text-rust-dark', current === c.href && 'font-semibold text-rust-dark']}
+                      aria-current={current === c.href ? 'page' : undefined}
+                    >{c.label}</a>
+                  </li>
+                ))}
+              </ul>
+              <div class="paper flex flex-col justify-between border-l border-line p-5">
+                <p class="text-[0.95rem] leading-snug text-ink-soft">{blurbs[item.label]}</p>
+                <a href={business.phoneHref} class="mt-4 flex items-center gap-2 font-display text-lg font-bold text-teal no-underline hover:text-rust-dark" data-call>
+                  <Icon name="phone" size={18} />{business.phone}
+                </a>
+              </div>
+            </div>
+          </div>
+        </li>
+      ) : (
+        <li class="flex items-stretch">
+          <a
+            href={item.href}
+            class:list={['flex items-center px-2.5 py-6 font-display text-[1.06rem] font-bold uppercase tracking-wide text-white no-underline hover:text-sand xl:px-3.5', active && 'text-sand']}
+            aria-current={current === item.href ? 'page' : undefined}
+          >{item.label}</a>
+        </li>
+      );
+    })}
+  </ul>
+</nav>
+
+<style>
+  .dd-panel { display: none; }
+  .dd:hover > .dd-panel,
+  .dd:focus-within > .dd-panel,
+  .dd[data-open='true'] > .dd-panel { display: block; }
+  .dd[data-suppress] > .dd-panel { display: none !important; }
+  .dd:hover .dd-link, .dd[data-open='true'] .dd-link { color: var(--color-sand); }
+  /* Keep the last dropdowns inside the viewport */
+  .dd:nth-child(4) > .dd-panel { left: auto; right: -8rem; }
+</style>
+
+<script>
+  const items = document.querySelectorAll<HTMLElement>('[data-dd]');
+  const closeAll = (except?: HTMLElement) =>
+    items.forEach((li) => {
+      if (li === except) return;
+      li.dataset.open = 'false';
+      li.querySelector('.dd-toggle')?.setAttribute('aria-expanded', 'false');
+    });
+  items.forEach((li) => {
+    const btn = li.querySelector<HTMLButtonElement>('.dd-toggle')!;
+    btn.addEventListener('click', () => {
+      const open = li.dataset.open !== 'true';
+      closeAll(li);
+      li.dataset.open = String(open);
+      delete li.dataset.suppress;
+      btn.setAttribute('aria-expanded', String(open));
+    });
+    li.addEventListener('mouseenter', () => { delete li.dataset.suppress; btn.setAttribute('aria-expanded', 'true'); });
+    li.addEventListener('mouseleave', () => { if (li.dataset.open !== 'true') btn.setAttribute('aria-expanded', 'false'); });
+    li.addEventListener('focusout', (e) => {
+      if (!li.contains(e.relatedTarget as Node)) {
+        li.dataset.open = 'false';
+        delete li.dataset.suppress;
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+    li.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        li.dataset.open = 'false';
+        li.dataset.suppress = '1';
+        btn.setAttribute('aria-expanded', 'false');
+        btn.focus();
+      }
+    });
+  });
+  document.addEventListener('click', (e) => {
+    if (!(e.target as HTMLElement).closest('[data-dd]')) closeAll();
+  });
+</script>

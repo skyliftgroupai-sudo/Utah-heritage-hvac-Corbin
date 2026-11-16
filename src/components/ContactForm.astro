@@ -1,0 +1,169 @@
+---
+import { cityList } from '../data/areas-list';
+import { business } from '../data/business';
+interface Props { id?: string; heading?: string; intro?: string; defaultService?: string; showOptIn?: boolean; headingLevel?: 'h2' | 'h3' }
+const {
+  id = 'request',
+  heading = 'Request an Estimate',
+  intro = 'Tell us what is going on. We call back to set a time and give you a price before any work starts.',
+  defaultService = '',
+  showOptIn = true,
+  headingLevel = 'h2',
+} = Astro.props;
+const H = headingLevel;
+const endpoint = (import.meta.env.PUBLIC_FORM_ENDPOINT as string | undefined) || '';
+const services = [
+  'AC repair', 'AC installation / replacement', 'AC tune-up', 'Furnace repair', 'Heat pump repair', 'Heating installation / replacement',
+  'Heating tune-up', 'Ductless mini split', 'Indoor air quality', 'Ductwork / zoning', 'Maintenance plan', 'Efficiency audit', 'Commercial service', 'Something else',
+];
+const f = (n: string) => `${id}-${n}`;
+const label = 'mb-1 block font-semibold text-ink';
+const input = 'block w-full rounded-md border-2 border-[#8c9696] bg-white px-3 py-2.5 text-ink focus:border-teal focus:outline-none aria-[invalid=true]:border-rust-dark';
+const err = 'mt-1 hidden text-[0.95rem] font-semibold text-rust-dark';
+---
+<div id={id} class="scroll-mt-28">
+  <H>{heading}</H>
+  <p class="mt-2 text-ink-soft">{intro}</p>
+  <form
+    class="uh-form mt-6 grid gap-4 sm:grid-cols-2"
+    method="post"
+    action={endpoint || '/thank-you/'}
+    data-endpoint={endpoint}
+    novalidate
+  >
+    <div class="sm:col-span-1">
+      <label for={f('name')} class={label}>Full name <span class="text-rust-dark" aria-hidden="true">*</span></label>
+      <input id={f('name')} name="name" type="text" autocomplete="name" required class={input} aria-describedby={f('name-err')} />
+      <p id={f('name-err')} class={err}>Please enter your name.</p>
+    </div>
+    <div>
+      <label for={f('phone')} class={label}>Phone <span class="text-rust-dark" aria-hidden="true">*</span></label>
+      <input id={f('phone')} name="phone" type="tel" autocomplete="tel" required pattern="[0-9()+\-. ]{10,}" class={input} aria-describedby={f('phone-err')} />
+      <p id={f('phone-err')} class={err}>Please enter a phone number with area code.</p>
+    </div>
+    <div>
+      <label for={f('email')} class={label}>Email <span class="text-rust-dark" aria-hidden="true">*</span></label>
+      <input id={f('email')} name="email" type="email" autocomplete="email" required class={input} aria-describedby={f('email-err')} />
+      <p id={f('email-err')} class={err}>Please enter a valid email address.</p>
+    </div>
+    <div>
+      <label for={f('city')} class={label}>City <span class="text-rust-dark" aria-hidden="true">*</span></label>
+      <select id={f('city')} name="city" required class={input} aria-describedby={f('city-err')}>
+        <option value="">Choose your city</option>
+        {cityList.map((c) => <option>{c.name}</option>)}
+        <option>Other</option>
+      </select>
+      <p id={f('city-err')} class={err}>Please choose a city.</p>
+    </div>
+    <fieldset class="sm:col-span-1">
+      <legend class={label}>Property type</legend>
+      <div class="grid grid-cols-2 overflow-hidden rounded-md border-2 border-[#8c9696]">
+        <label class="flex cursor-pointer items-center justify-center gap-2 px-3 py-2.5 font-semibold prop-opt">
+          <input type="radio" name="property_type" value="Residential" checked class="accent-rust" />Residential
+        </label>
+        <label class="flex cursor-pointer items-center justify-center gap-2 border-l-2 border-[#8c9696] px-3 py-2.5 font-semibold prop-opt">
+          <input type="radio" name="property_type" value="Commercial" class="accent-rust" />Commercial
+        </label>
+      </div>
+    </fieldset>
+    <div>
+      <label for={f('service')} class={label}>Service needed</label>
+      <select id={f('service')} name="service" class={input}>
+        <option value="">Choose a service</option>
+        {services.map((s) => <option selected={s === defaultService}>{s}</option>)}
+      </select>
+    </div>
+    <fieldset class="sm:col-span-2">
+      <legend class={label}>Best way to reach you</legend>
+      <div class="flex flex-wrap gap-x-6 gap-y-2">
+        {['Call', 'Text', 'Email'].map((m, i) => (
+          <label class="flex items-center gap-2"><input type="radio" name="preferred_contact" value={m} checked={i === 0} class="h-5 w-5 accent-rust" />{m}</label>
+        ))}
+      </div>
+    </fieldset>
+    <div class="sm:col-span-2">
+      <label for={f('message')} class={label}>What's going on?</label>
+      <textarea id={f('message')} name="message" rows="4" class={input} placeholder="Example: Upstairs AC runs but blows warm air since yesterday."></textarea>
+    </div>
+    <input type="hidden" name="coupon" value="" data-coupon />
+    <input type="hidden" name="page" value={Astro.url.pathname} />
+    <div class="hidden" aria-hidden="true">
+      <label for={f('company')}>Leave this empty</label>
+      <input id={f('company')} name="company_website" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+    {showOptIn && (
+      <label class="flex items-start gap-3 sm:col-span-2">
+        <input type="checkbox" name="specials_opt_in" value="yes" class="mt-1 h-5 w-5 shrink-0 accent-rust" />
+        <span>Send me seasonal specials and tune-up reminders by email. Unsubscribe anytime.</span>
+      </label>
+    )}
+    <div class="sm:col-span-2">
+      <label class="flex items-start gap-3">
+        <input id={f('consent')} type="checkbox" name="consent" value="yes" required class="mt-1 h-5 w-5 shrink-0 accent-rust" aria-describedby={f('consent-err')} />
+        <span class="text-[0.95rem] leading-snug text-ink-soft">
+          I agree that {business.name} may contact me by call, text or email about this request, including with automated technology. Message and data rates may apply. Consent is not required to buy. See our <a href="/privacy-policy/" class="link">Privacy Policy</a> and <a href="/terms/" class="link">Terms</a>.
+        </span>
+      </label>
+      <p id={f('consent-err')} class={err}>Please check the box so we can contact you.</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-4 sm:col-span-2">
+      <button type="submit" class="btn btn-rust">Send Request</button>
+      <p class="text-[0.95rem] text-ink-soft">Prefer to talk? <a href={business.phoneHref} class="link" data-call>{business.phone}</a></p>
+    </div>
+    <p class="form-status hidden font-semibold text-rust-dark sm:col-span-2" role="alert"></p>
+  </form>
+</div>
+
+<style>
+  .prop-opt.is-on { background: var(--color-teal); color: #fff; }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('form.uh-form').forEach((form) => {
+    const coupon = new URLSearchParams(location.search).get('coupon');
+    const couponField = form.querySelector<HTMLInputElement>('[data-coupon]');
+    if (coupon && couponField) {
+      couponField.value = coupon;
+      const msg = form.querySelector<HTMLTextAreaElement>('textarea[name="message"]');
+      if (msg && !msg.value) msg.value = `I'd like to redeem the "${coupon.replace(/-/g, ' ')}" coupon.`;
+    }
+    const opts = form.querySelectorAll<HTMLLabelElement>('.prop-opt');
+    const syncOpts = () => opts.forEach((l) => l.classList.toggle('is-on', !!l.querySelector('input')?.checked));
+    opts.forEach((l) => l.querySelector('input')?.addEventListener('change', syncOpts));
+    syncOpts();
+    const fields = form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[required]');
+    const check = (el: HTMLInputElement | HTMLSelectElement) => {
+      const ok = el.checkValidity();
+      el.setAttribute('aria-invalid', String(!ok));
+      const errId = el.getAttribute('aria-describedby');
+      if (errId) document.getElementById(errId)?.classList.toggle('hidden', ok);
+      return ok;
+    };
+    fields.forEach((el) => {
+      el.addEventListener('blur', () => check(el));
+      el.addEventListener('change', () => el.getAttribute('aria-invalid') === 'true' && check(el));
+    });
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      let first: HTMLElement | null = null;
+      fields.forEach((el) => { if (!check(el) && !first) first = el; });
+      if (first) { (first as HTMLElement).focus(); return; }
+      const data = new FormData(form);
+      if (data.get('company_website')) return; // honeypot
+      const btn = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+      btn.disabled = true; btn.textContent = 'Sending…';
+      const endpoint = form.dataset.endpoint;
+      try {
+        if (endpoint) {
+          await fetch(endpoint, { method: 'POST', mode: 'no-cors', body: new URLSearchParams(data as any) });
+        }
+        location.href = '/thank-you/';
+      } catch {
+        btn.disabled = false; btn.textContent = 'Send Request';
+        const status = form.querySelector('.form-status')!;
+        status.textContent = 'Something went wrong sending your request. Please call (801) 661-5412.';
+        status.classList.remove('hidden');
+      }
+    });
+  });
+</script>

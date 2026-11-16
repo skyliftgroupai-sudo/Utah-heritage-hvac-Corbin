@@ -1,0 +1,128 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import FAQ from '../components/FAQ.astro';
+import CTABand from '../components/CTABand.astro';
+import ContactForm from '../components/ContactForm.astro';
+import OfferStrip from '../components/OfferStrip.astro';
+import ReviewCards from '../components/ReviewCards.astro';
+import ServiceAreaList from '../components/ServiceAreaList.astro';
+import MaintenancePromo from '../components/MaintenancePromo.astro';
+import Icon, { type IconName } from '../components/Icon.astro';
+import { byCategory, serviceHref } from '../data/services';
+import { faqPages } from '../data/faq-pages';
+import { coupons } from '../data/coupons';
+import { SITE_URL } from '../data/business';
+import { md, plain } from '../lib/md';
+import { hubExtra } from '../data/extra-copy';
+import { faqNode, offerCatalogNode, serviceNode } from '../lib/schema';
+import type { Hub } from '../data/types';
+
+interface Props { hub: Hub }
+const { hub } = Astro.props;
+const subs = byCategory(hub.category);
+const more = hubExtra[hub.category as keyof typeof hubExtra];
+const sections = more ? [...hub.sections, { heading: more.heading, body: more.body }] : hub.sections;
+const faqPage = faqPages.find((f) => f.category === hub.category);
+const url = `${SITE_URL}/${hub.category}/`;
+const icon: IconName = hub.category === 'heating' ? 'flame' : hub.category === 'commercial' ? 'building' : 'snowflake';
+const items = subs.map((s) => ({ name: s.name, href: serviceHref(s) }));
+const offerItems = hub.category === 'commercial' ? coupons.filter((c) => c.category === 'commercial' || c.id === 'repair-visit') : coupons.filter((c) => c.category !== 'commercial').slice(0, 3);
+---
+<BaseLayout
+  title={hub.title}
+  description={hub.meta}
+  crumbs={[{ label: hub.name, href: `/${hub.category}/` }]}
+  schema={[
+    serviceNode(url, { name: `${hub.name} Services`, serviceType: `${hub.name} services`, description: plain(hub.quickAnswer), audience: hub.category === 'commercial' ? 'business' : 'residential' }),
+    offerCatalogNode(url, `${hub.name} Services`, items),
+    faqNode(url, hub.faqs),
+  ]}
+>
+  <PageHero eyebrow={hub.eyebrow} h1={hub.h1} sub={hub.sub} photo={hub.photo} />
+
+  <section class="section bg-white">
+    <div class="wrap grid gap-10 lg:grid-cols-[1.2fr_1fr]">
+      <div>
+        <div class="rule-top paper rounded-md p-6">
+          <p class="eyebrow">Quick answer</p>
+          <p class="mt-2 text-lg leading-relaxed">{hub.quickAnswer}</p>
+        </div>
+        <div class="prose-uh mt-8">{hub.intro.map((p) => <p set:html={md(p)} />)}</div>
+      </div>
+      <div class="prose-uh">
+        {sections.slice(0, 1).map((sec) => (
+          <>
+            <h2 class="!mt-0">{sec.heading}</h2>
+            {sec.body.map((p) => <p set:html={md(p)} />)}
+            {sec.list && <ul>{sec.list.map((l) => <li set:html={md(l)} />)}</ul>}
+          </>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="paper section">
+    <div class="wrap">
+      <h2>All {hub.name} Services</h2>
+      <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {subs.map((s) => (
+          <li>
+            <a href={serviceHref(s)} class="group flex h-full gap-4 rounded-md border border-line border-t-4 border-t-teal bg-white p-5 no-underline hover:border-t-rust">
+              <Icon name={s.slug.includes('emergency') ? 'phone' : s.slug.includes('tune') || s.slug.includes('maintenance') ? 'calendar' : s.slug.includes('install') ? 'wrench' : icon} size={28} class="mt-1 shrink-0 text-rust" />
+              <span>
+                <span class="block font-display text-[1.4rem] font-bold leading-tight text-teal group-hover:text-rust-dark">{s.name}</span>
+                <span class="mt-1 block text-[0.98rem] text-ink-soft">{s.short}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+        {faqPage && (
+          <li>
+            <a href={`/${hub.category}/faqs/`} class="group flex h-full gap-4 rounded-md border border-line border-t-4 border-t-sand bg-white p-5 no-underline hover:border-t-rust">
+              <Icon name="check" size={28} class="mt-1 shrink-0 text-rust" />
+              <span>
+                <span class="block font-display text-[1.4rem] font-bold leading-tight text-teal group-hover:text-rust-dark">{faqPage.name}</span>
+                <span class="mt-1 block text-[0.98rem] text-ink-soft">Straight answers to the questions we hear most.</span>
+              </span>
+            </a>
+          </li>
+        )}
+      </ul>
+    </div>
+  </section>
+
+  {sections.slice(1).map((sec) => (
+    <section class="section bg-white">
+      <div class="wrap prose-uh">
+        <h2 class="!mt-0">{sec.heading}</h2>
+        {sec.body.map((p) => <p set:html={md(p)} />)}
+        {sec.list && <ul>{sec.list.map((l) => <li set:html={md(l)} />)}</ul>}
+      </div>
+    </section>
+  ))}
+
+  <OfferStrip items={offerItems} heading={`${hub.name} Specials`} />
+
+  <section class="section bg-white !pb-8">
+    <div class="wrap"><MaintenancePromo commercial={hub.category === 'commercial'} /></div>
+  </section>
+
+  <section class="section bg-white !pt-8">
+    <div class="wrap"><ReviewCards limit={3} heading="Reviews From Southern Utah Customers" /></div>
+  </section>
+
+  <CTABand photo={hub.photo} />
+
+  <section class="section bg-white">
+    <div class="wrap max-w-4xl"><FAQ faqs={hub.faqs} heading={`${hub.name} FAQs`} /></div>
+  </section>
+
+  <section class="paper section">
+    <div class="wrap"><ServiceAreaList heading={`${hub.name} Service Areas`} /></div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="wrap max-w-3xl"><ContactForm defaultService={hub.category === 'commercial' ? 'Commercial service' : ''} /></div>
+  </section>
+</BaseLayout>

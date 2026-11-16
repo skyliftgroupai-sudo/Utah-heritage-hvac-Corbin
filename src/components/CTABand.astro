@@ -1,0 +1,26 @@
+---
+import { Image } from 'astro:assets';
+import { business } from '../data/business';
+import { photos, type PhotoKey, type PhotoNeed } from '../data/photos';
+import Icon from './Icon.astro';
+interface Props { heading?: string; text?: string; photo?: PhotoKey | PhotoNeed }
+const {
+  heading = 'Need heating or cooling help in Southern Utah?',
+  text = 'Call or send a request. You get a straight answer and a price before any work starts.',
+  photo = 'furnaceCoil',
+} = Astro.props;
+const p = photo in photos ? photos[photo as PhotoKey] : photos.furnaceCoil;
+---
+<section class="on-dark relative isolate overflow-hidden bg-teal-900 text-white">
+  <Image src={p.src} alt="" widths={[640, 1024, 1600]} sizes="100vw" class="absolute inset-0 -z-10 h-full w-full object-cover opacity-25" loading="lazy" />
+  <div class="wrap flex flex-col gap-6 py-14 lg:flex-row lg:items-center lg:justify-between">
+    <div class="max-w-2xl">
+      <h2 class="text-white">{heading}</h2>
+      <p class="mt-3 text-lg text-white/85">{text}</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <a href="/contact/#request" class="btn btn-rust">Request Service</a>
+      <a href={business.phoneHref} class="btn btn-ghost-light" data-call><Icon name="phone" size={20} />{business.phone}</a>
+    </div>
+  </div>
+</section>

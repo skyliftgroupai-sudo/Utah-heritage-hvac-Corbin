@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CouponCard from '../components/CouponCard.astro';
+import CTABand from '../components/CTABand.astro';
+import ContactForm from '../components/ContactForm.astro';
+import FAQ from '../components/FAQ.astro';
+import { coupons } from '../data/coupons';
+import { SITE_URL } from '../data/business';
+import { faqNode } from '../lib/schema';
+
+const faqs = [
+  { q: 'How do I redeem a Utah Heritage HVAC coupon?', a: 'Click Redeem on the coupon to send a request with the offer attached, or call (801) 661-5412 and mention the coupon when you book. Coupons apply when presented at the time of booking.' },
+  { q: 'Can I combine HVAC coupons?', a: 'Unless a coupon says otherwise, one coupon applies per visit and coupons cannot be combined with other offers or maintenance plan pricing.' },
+  { q: 'Do coupons apply in Cedar City and Enterprise?', a: 'Yes. Utah Heritage HVAC coupons apply everywhere in our Washington County and Iron County service area, including Cedar City and Enterprise.' },
+];
+---
+<BaseLayout
+  title="HVAC Coupons & Specials | Utah Heritage HVAC"
+  description="Current HVAC coupons and specials from Utah Heritage HVAC for St. George, Cedar City and Southern Utah: tune-ups, repairs and new systems. Call to redeem."
+  crumbs={[{ label: 'Coupons', href: '/coupons/' }]}
+  schema={[faqNode(`${SITE_URL}/coupons/`, faqs)]}
+>
+  <PageHero eyebrow="Save on your next visit" h1="HVAC Coupons & Specials in St. George & Cedar City" sub="Mention a coupon when you book, or hit Redeem and we will attach it to your request." photo="acCondenser" />
+  <section class="paper section">
+    <div class="wrap">
+      <h2>Current Offers</h2>
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {coupons.map((c) => <CouponCard coupon={c} />)}
+      </div>
+      <p class="mt-8 max-w-3xl text-sm text-ink-soft">Offers valid in our Washington County and Iron County service area. One coupon per visit unless noted. Must be mentioned at time of booking. Prices are always quoted before work begins.</p>
+    </div>
+  </section>
+  <section class="section bg-white">
+    <div class="wrap max-w-4xl">
+      <FAQ faqs={faqs} heading="Coupon Questions" />
+      <p class="mt-6">Want offers year round? Our <a href="/maintenance-plan/" class="link">maintenance plan</a> keeps your system tuned up every spring and fall. Need help today? See <a href="/air-conditioning/ac-repair/" class="link">AC repair</a> or <a href="/heating/furnace-repair/" class="link">furnace repair</a>.</p>
+    </div>
+  </section>
+  <CTABand />
+  <section class="section bg-white"><div class="wrap max-w-3xl"><ContactForm /></div></section>
+</BaseLayout>

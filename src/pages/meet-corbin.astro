@@ -1,0 +1,174 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Photo from '../components/Photo.astro';
+import ReviewCards from '../components/ReviewCards.astro';
+import CTABand from '../components/CTABand.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Icon from '../components/Icon.astro';
+import { business, FLAGS, SITE_URL } from '../data/business';
+import { cityList } from '../data/areas-list';
+import { PERSON_ID } from '../lib/schema';
+
+const timeline = [
+  { when: '2006', title: 'Learned the trade hands-on', text: 'Started out running ductwork and installing residential and commercial systems on new construction, learning from experienced technicians who did it the right way.' },
+  { when: 'Early career', title: 'Service, startups and diagnostics', text: 'A seasoned service tech took him on and trained him in service calls, equipment startups and diagnostics: the skills that turn an installer into a complete HVAC technician.' },
+  { when: 'Growing', title: 'Technician to operations manager', text: 'Worked his way from technician to branch manager to operations manager at a major Southern Utah HVAC company, learning the scheduling, pricing and business side of the trade.' },
+  { when: '2026', title: 'Launched Utah Heritage HVAC', text: 'Started his own company, with his own standards, serving the community he lives in.' },
+];
+const values = [
+  { icon: 'wrench' as const, t: 'Clean, detail-focused work', d: 'Work that another technician would respect when he sees it. Proper technique on every job, big or small.' },
+  { icon: 'tag' as const, t: 'Fair, upfront pricing', d: 'Not the cheapest, not the most expensive. Priced for the quality of the work, and you know the number before anything starts.' },
+  { icon: 'home' as const, t: 'Relationships over transactions', d: 'The goal is customers he serves for years: neighbors who call him first and send their friends.' },
+];
+const personDetail = {
+  '@id': PERSON_ID,
+  description: 'Corbin Allen is the owner of Utah Heritage HVAC, a locally owned HVAC company in Southern Utah. He has worked in HVAC since 2006 in installation, service, diagnostics and operations management.',
+  birthPlace: { '@type': 'Place', name: 'Utah' },
+};
+const profile = { '@type': 'ProfilePage', '@id': `${SITE_URL}/meet-corbin/#profile`, mainEntity: { '@id': PERSON_ID } };
+---
+<BaseLayout
+  title="Meet Corbin Allen, Owner | Utah Heritage HVAC"
+  description="Meet Corbin Allen, owner of Utah Heritage HVAC. A Utah native in HVAC since 2006, serving St. George, Cedar City and Southern Utah from Enterprise."
+  crumbs={[{ label: 'Meet Corbin', href: '/meet-corbin/' }]}
+  schema={[personDetail, profile]}
+>
+  <section class="paper border-b border-line">
+    <div class="wrap grid gap-10 py-12 lg:grid-cols-[1.2fr_1fr] lg:items-center lg:py-16">
+      <div>
+        <p class="eyebrow">The owner of Utah Heritage HVAC</p>
+        <h1 class="mt-2">Meet Corbin Allen, Owner of Utah Heritage HVAC</h1>
+        <p class="mt-5 text-lg text-ink-soft">
+          A Utah native with about 20 years in HVAC. He started out running ductwork in 2006, worked his way up to running operations at a major Southern Utah HVAC company, and in 2026 started a local company of his own.
+        </p>
+        <div class="mt-7 flex flex-wrap gap-3">
+          <a href="/contact/#request" class="btn btn-rust">Schedule With Corbin</a>
+          <a href={business.phoneHref} class="btn btn-outline" data-call><Icon name="phone" size={20} />{business.phone}</a>
+        </div>
+      </div>
+      <Photo name="corbinPortrait" aspect="aspect-[4/5]" priority />
+    </div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="wrap grid gap-10 lg:grid-cols-[1fr_1.2fr]">
+      <div>
+        <p class="eyebrow">Where the name comes from</p>
+        <h2 class="mt-1">The Story Behind Utah Heritage</h2>
+      </div>
+      <div class="prose-uh">
+        <p>
+          Corbin's father had a dream of opening an organic farm in Southern Utah and calling it Utah Heritage Farms. It was a plan built on working with your hands, on land that meant something, in a community you belonged to.
+        </p>
+        <p>
+          When Corbin started his own HVAC company, the name was settled before anything else. Utah Heritage HVAC is a tribute to that dream and to the idea behind it: honest work, real care for the people you serve, and roots in this part of the state.
+        </p>
+        <p>
+          It is also a promise about how the company runs. No franchise playbook and no call center. One owner who is responsible for every job, and who wants to keep his customers for the long haul.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-teal text-white on-dark">
+    <div class="wrap">
+      <p class="eyebrow">Career</p>
+      <h2 class="mt-1 text-white">About 20 Years in Every Corner of HVAC</h2>
+      <ol class="mt-10 grid gap-px overflow-hidden rounded-md bg-white/15 md:grid-cols-2 lg:grid-cols-4">
+        {timeline.map((t) => (
+          <li class="bg-teal p-6">
+            <p class="font-display text-3xl font-bold text-sand">{t.when}</p>
+            <h3 class="mt-2 text-white">{t.title}</h3>
+            <p class="mt-2 text-white/85">{t.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="wrap grid gap-10 lg:grid-cols-2 lg:items-center">
+      <Photo name="corbinWorking" />
+      <div>
+        <p class="eyebrow">How he works</p>
+        <h2 class="mt-1">The Kind of Tech Who Is Happy to Have You Watch</h2>
+        <div class="prose-uh mt-5">
+          <p>Corbin does not mind if you follow him around while he works. He will show you the meter reading, point at the part that failed, and explain what he is looking at in plain language. Your home gets treated like it matters, because to him it does.</p>
+          <p>He is not trying to be the cheapest HVAC company in Southern Utah, and he is not the most expensive either. He takes real pride in the quality of his work. When other technicians open up a system he installed, they notice.</p>
+          <p>That is also why the same person handles your repairs and your <a href="/maintenance-plan/">maintenance visits</a>. When he knows your system, he can spot what changed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="paper section">
+    <div class="wrap">
+      <h2>What Corbin Stands For</h2>
+      <div class="mt-8 grid gap-6 md:grid-cols-3">
+        {values.map((v) => (
+          <div class="border-l-4 border-rust bg-white p-6">
+            <Icon name={v.icon} size={30} class="text-rust" />
+            <h3 class="mt-3">{v.t}</h3>
+            <p class="mt-2 text-ink-soft">{v.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="wrap grid gap-10 lg:grid-cols-[1.2fr_1fr]">
+      <div class="min-w-0">
+        <h2>A Utah Man Through and Through</h2>
+        <div class="prose-uh mt-5">
+          <p>
+            Corbin grew up in Utah and has lived all over the state, from Utah County to Salt Lake, with a couple of years camping and backpacking through the Cascade Mountains in Oregon along the way. He and his wife{FLAGS.SHOW_FAMILY_NAMES ? ', Lauren,' : ''} eventually made their way back to Southern Utah and bought a home in Enterprise.
+          </p>
+          <p>
+            He is a family man first. {FLAGS.SHOW_FAMILY_NAMES ? 'He and Lauren have two sons, Elijah and Nicholas,' : 'He and his wife have two sons,'} and life outside work revolves around them. When he is not on a job, you will usually find him outdoors keeping up with his boys.
+          </p>
+          <p>He lives right in the middle of the area he serves, which is exactly how he wants it.</p>
+        </div>
+        <h2 class="mt-12">Why Utah Heritage HVAC</h2>
+        <div class="prose-uh mt-5">
+          <p>
+            Utah Heritage HVAC exists to serve this community the way Corbin would want his own family served: with honesty, skill and care. He is not building a franchise. He is building a reputation one job at a time, from <a href="/service-areas/st-george/">St. George</a> to <a href="/service-areas/cedar-city/">Cedar City</a>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Company facts: written to be quoted -->
+      <aside id="company-facts" class="h-fit min-w-0 rounded-md border-2 border-teal">
+        <h2 class="bg-teal px-6 py-4 text-2xl text-white">Utah Heritage HVAC: Company Facts</h2>
+        <dl class="divide-y divide-line px-6 py-2 text-[1rem]">
+          {[
+            ['Company', `${business.name} (${business.longName})`],
+            ['Founded', String(business.foundingYear)],
+            ['Owner', `${business.owner}, Owner`],
+            ['HVAC experience', `Since ${business.careerStartYear} (20+ years)`],
+            ['Ownership', '100% locally owned and independent; not a franchise'],
+            ['Based in', 'Enterprise, Utah (service-area business, no storefront)'],
+            ['Services', 'AC repair and installation, furnace and heat pump service, ductless mini splits, indoor air quality, ductwork and zoning, maintenance plans, commercial HVAC'],
+            ['Service areas', `${cityList.map((c) => c.name).join(', ')} and surrounding Washington and Iron County`],
+            ['Pricing', 'Upfront pricing before work; free estimates on new systems; no travel fees'],
+            ['Credentials', `Licensed and insured${business.licenseNumber ? `, license #${business.licenseNumber}` : ''}`],
+            ['Phone', business.phone],
+            ['Email', business.email],
+          ].map(([k, v]) => (
+            <div class="grid grid-cols-[8.5rem_1fr] gap-3 py-2.5">
+              <dt class="font-semibold text-ink">{k}</dt>
+              <dd class="min-w-0 break-words text-ink-soft">{v}</dd>
+            </div>
+          ))}
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <section class="paper section">
+    <div class="wrap"><ReviewCards heading="What Customers Say About Corbin" /></div>
+  </section>
+
+  <CTABand heading="Talk to Corbin directly." text="Questions about your system, a repair, or the maintenance plan. Call or send a request." />
+  <section class="section bg-white"><div class="wrap max-w-3xl"><ContactForm /></div></section>
+</BaseLayout>

@@ -1,0 +1,23 @@
+---
+import Icon from './Icon.astro';
+interface Props { commercial?: boolean }
+const { commercial = false } = Astro.props;
+---
+<aside class="rounded-md border-2 border-teal bg-white">
+  <div class="grid gap-6 p-6 md:grid-cols-[1fr_auto] md:items-center lg:p-8">
+    <div>
+      <p class="eyebrow">{commercial ? 'Commercial maintenance plans' : 'The maintenance plan'}</p>
+      <h2 class="mt-1 text-3xl">{commercial ? 'Keep Every Unit on a Schedule' : 'Two Visits a Year. We Handle the Scheduling.'}</h2>
+      {commercial ? (
+        <p class="mt-3 text-ink-soft">Spring cooling and fall heating inspections, filter and belt changes, and a written report for every unit on the building. Built around how your space is used.</p>
+      ) : (
+        <ul class="mt-3 grid gap-x-6 gap-y-1 text-ink-soft sm:grid-cols-2">
+          {['Spring AC visit + fall heating visit', 'Same tech who does your repairs', '45–60 minutes per visit', 'Heat pumps covered both visits', 'Reminders sent for you', 'No travel fees'].map((t) => (
+            <li class="flex items-center gap-2"><Icon name="check" size={18} class="text-rust" />{t}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+    <a href={commercial ? '/commercial/maintenance-plans/' : '/maintenance-plan/'} class="btn btn-teal">{commercial ? 'Commercial Plans' : 'See the Plan'}</a>
+  </div>
+</aside>

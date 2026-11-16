@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceAreaList from '../../components/ServiceAreaList.astro';
+import CTABand from '../../components/CTABand.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import FAQ from '../../components/FAQ.astro';
+import { areas } from '../../data/areas';
+import { SITE_URL } from '../../data/business';
+import { faqNode } from '../../lib/schema';
+
+const faqs = [
+  { q: 'Which cities does Utah Heritage HVAC serve?', a: 'Utah Heritage HVAC serves St. George, Washington, Hurricane, Santa Clara, Ivins, Enterprise and Cedar City, plus surrounding communities in Washington County and Iron County.' },
+  { q: 'Do you serve towns not on the list?', a: 'Often, yes. If you are in Washington or Iron County and do not see your town, call (801) 661-5412 and we will tell you whether we can reach you.' },
+  { q: 'Is there a travel fee for areas farther from St. George?', a: 'No. Utah Heritage HVAC does not charge travel fees anywhere in our service area, including Cedar City and Enterprise.' },
+  { q: 'Do you have a storefront I can visit?', a: 'No. Utah Heritage HVAC is a service-area business. We come to your home or business. Call or send a request to schedule.' },
+];
+const url = `${SITE_URL}/service-areas/`;
+---
+<BaseLayout
+  title="HVAC Service Areas in Southern Utah | Utah Heritage HVAC"
+  description="Utah Heritage HVAC serves St. George, Washington, Hurricane, Santa Clara, Ivins, Enterprise and Cedar City. No travel fees. Call (801) 661-5412 today."
+  crumbs={[{ label: 'Service Areas', href: '/service-areas/' }]}
+  schema={[faqNode(url, faqs)]}
+>
+  <PageHero eyebrow="Washington County · Iron County" h1="HVAC Service Areas in Southern Utah" sub="From the St. George basin to Cedar City at nearly 5,800 feet. Two climates, one local company, no travel fees." photo="acCondenser" />
+  <section class="section bg-white">
+    <div class="wrap">
+      <ServiceAreaList heading="Cities We Serve" intro="Pick your city for local details: climate, common problems we see there, and answers to questions from your neighbors." />
+    </div>
+  </section>
+  <section class="paper section">
+    <div class="wrap">
+      <h2>Two Climates in One Service Area</h2>
+      <div class="mt-6 grid gap-6 md:grid-cols-2">
+        <div class="rounded-md border border-line bg-white p-6">
+          <h3>Washington County (about 2,700–3,200 ft)</h3>
+          <p class="mt-2 text-ink-soft">St. George, Washington, Hurricane, Santa Clara and Ivins. Long, very hot summers and mild winters. Air conditioners and heat pumps do the heavy lifting, and dust is a constant. Most repairs here are cooling repairs.</p>
+          <ul class="mt-3 space-y-1">{areas.filter((a) => a.county === 'Washington County' && a.slug !== 'enterprise').map((a) => <li><a href={`/service-areas/${a.slug}/`} class="link">{a.name}</a></li>)}</ul>
+        </div>
+        <div class="rounded-md border border-line bg-white p-6">
+          <h3>Escalante Valley &amp; Iron County (about 5,300–5,800 ft)</h3>
+          <p class="mt-2 text-ink-soft">Enterprise and Cedar City. Real winters with snow and nights in the teens, plus warm, dry summers. Furnaces and dual-fuel systems carry the load, and fall maintenance matters most.</p>
+          <ul class="mt-3 space-y-1">{areas.filter((a) => a.slug === 'enterprise' || a.slug === 'cedar-city').map((a) => <li><a href={`/service-areas/${a.slug}/`} class="link">{a.name}</a></li>)}</ul>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section bg-white"><div class="wrap max-w-4xl"><FAQ faqs={faqs} heading="Service Area Questions" /></div></section>
+  <CTABand />
+  <section class="section bg-white"><div class="wrap max-w-3xl"><ContactForm /></div></section>
+</BaseLayout>

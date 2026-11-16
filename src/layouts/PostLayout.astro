@@ -1,0 +1,132 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { MarkdownHeading } from 'astro';
+import { getCollection } from 'astro:content';
+import { getImage } from 'astro:assets';
+import BaseLayout from './BaseLayout.astro';
+import FAQ from '../components/FAQ.astro';
+import CTABand from '../components/CTABand.astro';
+import ContactForm from '../components/ContactForm.astro';
+import PostCard from '../components/PostCard.astro';
+import Photo from '../components/Photo.astro';
+import Icon from '../components/Icon.astro';
+import { catLabels } from '../data/blog';
+import { photos, type PhotoKey } from '../data/photos';
+import { business, SITE_URL, formatDate } from '../data/business';
+import { faqNode, BUSINESS_ID, PERSON_ID } from '../lib/schema';
+
+interface Props { post: CollectionEntry<'blog'>; headings: MarkdownHeading[]; words: number }
+const { post, headings, words } = Astro.props;
+const d = post.data;
+const url = `${SITE_URL}/blog/${post.id}/`;
+const photoKey = (d.photo in photos ? d.photo : 'acCondenser') as PhotoKey;
+const img = await getImage({ src: photos[photoKey].src, width: 1200, format: 'jpg' });
+const imgUrl = new URL(img.src, SITE_URL).href;
+const all = await getCollection('blog');
+const related = d.related.map((id) => all.find((p) => p.id === id)).filter(Boolean) as CollectionEntry<'blog'>[];
+const showToc = words > 1000 && headings.filter((h) => h.depth === 2).length > 2;
+const readMin = Math.max(1, Math.round(words / 230));
+const posting = {
+  '@type': 'BlogPosting',
+  '@id': `${url}#article`,
+  headline: d.title,
+  description: d.description,
+  datePublished: d.pubDate,
+  dateModified: d.updatedDate,
+  author: { '@id': PERSON_ID },
+  publisher: { '@id': BUSINESS_ID },
+  image: imgUrl,
+  mainEntityOfPage: { '@id': `${url}#webpage` },
+  articleSection: catLabels[d.category],
+  wordCount: words,
+  inLanguage: 'en-US',
+};
+---
+<BaseLayout
+  title={d.seoTitle}
+  description={d.description}
+  crumbs={[{ label: 'Blog', href: '/blog/' }, { label: d.title, href: `/blog/${post.id}/` }]}
+  schema={[posting, ...(d.faqs.length ? [faqNode(url, d.faqs)] : [])]}
+  ogImage={img.src}
+  ogType="article"
+>
+  <article>
+    <header class="paper border-b border-line">
+      <div class="wrap max-w-4xl py-10 lg:py-14">
+        <p class="eyebrow">{catLabels[d.category]}</p>
+        <h1 class="mt-2">{d.title}</h1>
+        <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.98rem] text-ink-soft">
+          <span>By <a href="/meet-corbin/" class="link">Corbin Allen</a>, Owner</span>
+          <span>Published <time datetime={d.pubDate}>{formatDate(d.pubDate)}</time></span>
+          <span>Updated <time datetime={d.updatedDate}>{formatDate(d.updatedDate)}</time></span>
+          <span>{readMin} min read</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap grid max-w-6xl gap-12 py-10 lg:grid-cols-[1fr_280px]">
+      <div>
+        <div class="rule-top rounded-md border border-line bg-white p-6">
+          <p class="eyebrow">TL;DR</p>
+          <p class="mt-2 text-lg leading-relaxed">{d.tldr}</p>
+        </div>
+        <Photo name={photoKey} class="mt-8" priority sizes="(min-width:1024px) 760px, 100vw" />
+        {showToc && (
+          <nav aria-label="Table of contents" class="mt-8 rounded-md border border-line p-5">
+            <p class="font-display text-xl font-bold uppercase tracking-wide text-teal">In this article</p>
+            <ol class="mt-3 list-decimal space-y-1 pl-5">
+              {headings.filter((h) => h.depth === 2).map((h) => <li><a href={`#${h.slug}`} class="link font-normal">{h.text}</a></li>)}
+            </ol>
+          </nav>
+        )}
+        <div class="prose-uh mt-8 max-w-[70ch]">
+          <slot />
+        </div>
+
+        {d.faqs.length > 0 && (
+          <div class="mt-12"><FAQ faqs={d.faqs} heading="Frequently Asked Questions" /></div>
+        )}
+
+        <div class="mt-12 flex gap-5 rounded-md border border-line bg-cream p-6">
+          <Photo name="corbinPortrait" aspect="aspect-square" class="!w-24 shrink-0 !p-1 !text-[0.6rem]" />
+          <div>
+            <p class="eyebrow">About the author</p>
+            <p class="mt-1 font-display text-2xl font-bold text-teal">Corbin Allen</p>
+            <p class="text-ink-soft">Owner of {business.longName}. In the HVAC trade since 2006, from new-construction installs to service, diagnostics and operations management. Lives in Enterprise, Utah.</p>
+            <a href="/meet-corbin/" class="link mt-2 inline-block">Read Corbin's story</a>
+          </div>
+        </div>
+      </div>
+
+      <aside class="space-y-6 lg:sticky lg:top-28 lg:h-fit">
+        <div class="rounded-md bg-teal p-5 text-white on-dark">
+          <p class="font-display text-2xl font-bold uppercase">Need HVAC Help?</p>
+          <p class="mt-2 text-white/85">Upfront pricing, no travel fees, Washington &amp; Iron County.</p>
+          <a href={business.phoneHref} class="btn btn-rust mt-4 w-full" data-call><Icon name="phone" size={20} />{business.phone}</a>
+          <a href="#request" class="btn btn-ghost-light mt-3 w-full">Request Service</a>
+        </div>
+        <div class="rounded-md border border-line p-5">
+          <p class="font-display text-xl font-bold uppercase text-teal">Our Services</p>
+          <ul class="mt-2 space-y-1.5">
+            <li><a href="/air-conditioning/ac-repair/" class="link font-normal">AC Repair</a></li>
+            <li><a href="/heating/furnace-repair/" class="link font-normal">Furnace Repair</a></li>
+            <li><a href="/air-conditioning/ac-installation/" class="link font-normal">New AC Systems</a></li>
+            <li><a href="/maintenance-plan/" class="link font-normal">Maintenance Plan</a></li>
+            <li><a href="/commercial/" class="link font-normal">Commercial HVAC</a></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </article>
+
+  {related.length > 0 && (
+    <section class="paper section">
+      <div class="wrap">
+        <h2>Related Articles</h2>
+        <div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">{related.map((p) => <PostCard post={p} />)}</div>
+      </div>
+    </section>
+  )}
+  <CTABand />
+  <section class="section bg-white"><div class="wrap max-w-3xl"><ContactForm /></div></section>
+</BaseLayout>

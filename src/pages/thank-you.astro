@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { business } from '../data/business';
+---
+<BaseLayout
+  title="Thank You | Utah Heritage HVAC"
+  description="Thanks for contacting Utah Heritage HVAC. We received your request and will call you back shortly to schedule your HVAC service in Southern Utah."
+  noindex
+>
+  <section class="paper section">
+    <div class="wrap max-w-3xl">
+      <Icon name="check" size={56} class="text-rust" />
+      <h1 class="mt-4">Thanks. We Got Your Request.</h1>
+      <p class="mt-4 text-lg text-ink-soft">We will call you back to set a time and talk through what is going on. During business hours that is usually quick. If it is urgent, call us now.</p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href={business.phoneHref} class="btn btn-rust" data-call><Icon name="phone" size={20} />Call {business.phone}</a>
+        <a href="/" class="btn btn-outline">Back to Home</a>
+      </div>
+      <p class="mt-10 text-ink-soft">While you wait: <a href="/coupons/" class="link">current coupons</a> · <a href="/maintenance-plan/" class="link">maintenance plan</a> · <a href="/blog/" class="link">HVAC tips</a></p>
+    </div>
+  </section>
+  <script is:inline>
+    (function fire(n) {
+      if (typeof window.gtag === 'function') { window.gtag('event', 'generate_lead', { form_location: document.referrer || 'direct' }); return; }
+      if (n < 20) setTimeout(function () { fire(n + 1); }, 250);
+    })(0);
+  </script>
+</BaseLayout>

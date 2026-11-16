@@ -1,0 +1,21 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Photo from './Photo.astro';
+import { formatDate } from '../data/business';
+import type { PhotoKey } from '../data/photos';
+interface Props { post: CollectionEntry<'blog'>; headingLevel?: 'h2' | 'h3' }
+const { post, headingLevel = 'h3' } = Astro.props;
+const H = headingLevel;
+import { catLabels } from '../data/blog';
+---
+<article class="group flex h-full flex-col overflow-hidden rounded-md border border-line bg-white" data-cat={post.data.category}>
+  <Photo name={post.data.photo as PhotoKey} aspect="aspect-[16/10]" class="!rounded-none" sizes="(min-width:768px) 33vw, 100vw" widths={[400, 640, 800]} />
+  <div class="flex flex-1 flex-col p-5">
+    <p class="eyebrow">{catLabels[post.data.category]}</p>
+    <H class="mt-1 text-[1.55rem] leading-tight">
+      <a href={`/blog/${post.id}/`} class="no-underline hover:text-rust-dark">{post.data.title}</a>
+    </H>
+    <p class="mt-2 flex-1 text-[1rem] text-ink-soft">{post.data.description}</p>
+    <p class="mt-4 text-sm text-ink-soft"><time datetime={post.data.pubDate}>{formatDate(post.data.pubDate)}</time> · Corbin Allen</p>
+  </div>
+</article>

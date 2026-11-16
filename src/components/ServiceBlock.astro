@@ -1,0 +1,33 @@
+---
+import Photo from './Photo.astro';
+import type { PhotoKey, PhotoNeed } from '../data/photos';
+import { md } from '../lib/md';
+interface Props {
+  eyebrow: string;
+  heading: string;
+  body: string[];
+  bullets?: string[];
+  href: string;
+  cta: string;
+  photo: PhotoKey | PhotoNeed;
+  reverse?: boolean;
+  tone?: 'white' | 'cream';
+}
+const { eyebrow, heading, body, bullets, href, cta, photo, reverse = false, tone = 'white' } = Astro.props;
+---
+<section class:list={['section', tone === 'cream' ? 'paper' : 'bg-white']}>
+  <div class="wrap grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-14">
+    <div class:list={[reverse && 'lg:order-2']}>
+      <Photo name={photo} />
+    </div>
+    <div>
+      <p class="eyebrow">{eyebrow}</p>
+      <h2 class="mt-1">{heading}</h2>
+      <div class="prose-uh mt-4">
+        {body.map((p) => <p set:html={md(p)} />)}
+        {bullets && <ul>{bullets.map((b) => <li set:html={md(b)} />)}</ul>}
+      </div>
+      <a href={href} class="btn btn-outline mt-6">{cta}</a>
+    </div>
+  </div>
+</section>

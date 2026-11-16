@@ -1,0 +1,11 @@
+---
+import AreaLayout from '../../layouts/AreaLayout.astro';
+import { areas } from '../../data/areas';
+import type { Area } from '../../data/types';
+
+export function getStaticPaths() {
+  return areas.map((a) => ({ params: { city: a.slug }, props: { a } }));
+}
+interface Props { a: Area }
+---
+<AreaLayout a={Astro.props.a} />

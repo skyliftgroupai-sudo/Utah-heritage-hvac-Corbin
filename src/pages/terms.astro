@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { business, LAST_UPDATED, formatDate } from '../data/business';
+---
+<BaseLayout
+  title="Terms of Use | Utah Heritage HVAC"
+  description="Terms of use for the Utah Heritage HVAC website, service requests, coupons and communications for customers in St. George, Cedar City and Southern Utah."
+  crumbs={[{ label: 'Terms', href: '/terms/' }]}
+>
+  <section class="section bg-white">
+    <div class="wrap prose-uh">
+      <h1>Terms of Use for Utah Heritage HVAC</h1>
+      <p><em>Last updated: {formatDate(LAST_UPDATED)}. [CLIENT TO PROVIDE: have these terms reviewed by your attorney before launch.]</em></p>
+      <h2>Using this website</h2>
+      <p>This website provides general information about {business.name}'s heating and air conditioning services in Southern Utah. Content is for general information and is not a substitute for an on-site inspection of your equipment.</p>
+      <h2>Service requests</h2>
+      <p>Submitting a form is a request for contact, not a confirmed appointment. We will contact you to confirm scheduling and pricing. All work is quoted before it begins, and no work is performed without your approval.</p>
+      <h2>Coupons and specials</h2>
+      <p>Coupons are valid only within our service area, must be mentioned at the time of booking, and cannot be combined unless stated. Offers may change or end without notice and have no cash value.</p>
+      <h2>Communications</h2>
+      <p>By submitting a form and checking the consent box, you agree that we may contact you by call, text or email about your request. Consent is not a condition of purchase. See our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+      <h2>Liability</h2>
+      <p>We work to keep information on this site accurate, but we make no guarantees about its completeness. {business.name} is not liable for decisions made based on website content alone.</p>
+      <h2>Contact</h2>
+      <p>Questions about these terms: {business.phone} or {business.email}.</p>
+    </div>
+  </section>
+</BaseLayout>

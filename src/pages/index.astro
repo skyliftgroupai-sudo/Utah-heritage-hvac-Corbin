@@ -1,0 +1,308 @@
+---
+import { getImage } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TrustBar from '../components/TrustBar.astro';
+import OfferStrip from '../components/OfferStrip.astro';
+import MeetOwner from '../components/MeetOwner.astro';
+import ServiceBlock from '../components/ServiceBlock.astro';
+import CouponCard from '../components/CouponCard.astro';
+import ServiceAreaList from '../components/ServiceAreaList.astro';
+import ReviewCards from '../components/ReviewCards.astro';
+import FAQ from '../components/FAQ.astro';
+import ContactForm from '../components/ContactForm.astro';
+import CTABand from '../components/CTABand.astro';
+import Photo from '../components/Photo.astro';
+import Icon from '../components/Icon.astro';
+import PostCard from '../components/PostCard.astro';
+import { business, FLAGS } from '../data/business';
+import { photos } from '../data/photos';
+import { coupons } from '../data/coupons';
+import { homeFaqs } from '../data/faqs';
+import { faqNode } from '../lib/schema';
+import { SITE_URL } from '../data/business';
+
+const posts = (await getCollection('blog')).sort((a, b) => b.data.pubDate.localeCompare(a.data.pubDate)).slice(0, 3);
+const hero = photos.furnaceCoil;
+const heroImg = await getImage({ src: hero.src, widths: [640, 960, 1400, 1600], sizes: '100vw' });
+
+const tiles = [
+  { label: 'Air Conditioning', href: '/air-conditioning/', photo: 'acCondenser' as const, line: 'Repair, replacement and tune-ups' },
+  { label: 'Heating', href: '/heating/', photo: 'furnaceFull' as const, line: 'Furnaces and heat pumps' },
+  { label: 'Maintenance Plan', href: '/maintenance-plan/', photo: 'furnacePlenum' as const, line: 'Two visits a year' },
+  { label: 'Commercial', href: '/commercial/', photo: 'miniOutdoor' as const, line: 'Rooftop units and light commercial' },
+];
+const why = [
+  { t: 'An honest diagnosis', d: 'We find the actual cause and show you. If the fix is a $20 part, that is what we tell you.' },
+  { t: 'The same tech who repairs it maintains it', d: 'The person doing your tune-up is the person who would show up for a breakdown. He already knows your system.' },
+  { t: 'The price before the work', d: 'You get an upfront number and decide. Nothing gets added after the fact.' },
+  { t: 'A clean job site', d: 'Drop cloths down, old parts hauled off, closets left cleaner than we found them.' },
+  { t: 'No travel fees', d: 'St. George, Hurricane, Enterprise or Cedar City. Same deal everywhere we work.' },
+];
+const url = `${SITE_URL}/`;
+---
+<BaseLayout
+  title="Utah Heritage HVAC | AC & Heating, St. George & Cedar City"
+  description="Locally owned HVAC company in St. George and Cedar City. AC and furnace repair, installs and maintenance with upfront pricing. Call (801) 661-5412."
+  schema={[faqNode(url, homeFaqs)]}
+>
+  <link slot="head" rel="preload" as="image" imagesrcset={heroImg.srcSet.attribute} imagesizes="100vw" fetchpriority="high" />
+
+  <!-- 2. Hero -->
+  <section class="on-dark relative isolate overflow-hidden bg-teal-900 text-white">
+    <img
+      src={heroImg.src}
+      srcset={heroImg.srcSet.attribute}
+      sizes="100vw"
+      width={hero.src.width}
+      height={hero.src.height}
+      alt="Insulated refrigerant line set and furnace installed by Utah Heritage HVAC in a Southern Utah home"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+      class="absolute inset-0 -z-10 h-full w-full object-cover object-[70%_center]"
+    />
+    <div class="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(11,41,40,.95)_0%,rgba(11,41,40,.86)_50%,rgba(11,41,40,.35)_100%)]"></div>
+    <div class="wrap py-16 lg:py-24">
+      <p class="eyebrow">{business.taglines.primary}</p>
+      <h1 class="mt-3 max-w-3xl text-white">AC &amp; Heating Repair in St. George, Cedar City &amp; Southern Utah</h1>
+      <p class="mt-5 max-w-2xl text-lg text-white/90 lg:text-xl">
+        Locally owned, licensed and insured. You get an upfront price before we touch anything, free estimates on new systems, and same-day service when the schedule allows.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="#request" class="btn btn-rust">Request Service</a>
+        <a href={business.phoneHref} class="btn btn-ghost-light" data-call><Icon name="phone" size={20} />Call {business.phone}</a>
+      </div>
+      <ul class="mt-8 flex flex-wrap gap-x-6 gap-y-2 font-display text-lg font-semibold uppercase tracking-wide text-white/90">
+        {['Locally Owned', 'No Travel Fees', 'Upfront Pricing'].map((t) => (
+          <li class="flex items-center gap-2"><Icon name="check" size={20} class="text-sand" />{t}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 3. Offers strip -->
+  <OfferStrip items={coupons.slice(0, 4)} />
+
+  <!-- 4. Category tiles -->
+  <section class="section bg-white !pb-10" aria-labelledby="cat-h">
+    <div class="wrap">
+      <h2 id="cat-h">Heating &amp; Cooling Services</h2>
+      <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {tiles.map((t) => (
+          <li>
+            <a href={t.href} class="group relative block overflow-hidden rounded-md no-underline">
+              <Photo name={t.photo} aspect="aspect-[3/4]" sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw" widths={[400, 600, 800]} class="transition-transform duration-300 group-hover:scale-[1.03]" />
+              <span class="absolute inset-x-0 bottom-0 bg-[linear-gradient(transparent,rgba(11,41,40,.94)_45%)] px-5 pb-5 pt-16 text-white">
+                <span class="block font-display text-[1.7rem] font-bold uppercase leading-none">{t.label}</span>
+                <span class="mt-1 flex items-center justify-between text-white/85">{t.line}<Icon name="arrow" size={20} class="text-sand" /></span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 5. Trust bar -->
+  <TrustBar />
+
+  <!-- 6. About intro -->
+  <section class="paper section">
+    <div class="wrap grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:gap-14">
+      <div>
+        <p class="eyebrow">{business.taglines.trusted}</p>
+        <h2 class="mt-1">Serving Southern Utah with Honesty &amp; Craft</h2>
+      </div>
+      <div class="prose-uh">
+        <p>
+          Utah Heritage HVAC is a one-owner shop out of Enterprise. When you call, you are not talking to a dispatch center in another state. You are talking to the person who will be in your utility closet with a meter in his hand.
+        </p>
+        <p>
+          We work on what Southern Utah homes and businesses actually run: split systems baking in St. George sun, furnaces carrying Cedar City through January, heat pumps that never get a day off, and mini splits in casitas and shops. We tell you what is wrong, what it costs, and what we would do if it were our house. Then you make the call. If you want fewer surprises next year, ask about our <a href="/maintenance-plan/">maintenance plan</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Meet the owner -->
+  <MeetOwner />
+
+  <!-- 8. Service blocks -->
+  <ServiceBlock
+    tone="cream"
+    eyebrow="Air conditioning"
+    heading="AC Repair, Installation & Tune-Ups"
+    body={[
+      'When it is 108 in St. George, a dead AC is not an inconvenience. It is a problem. We carry the common failure parts (capacitors, contactors, fan motors) so most [AC repairs](/air-conditioning/ac-repair/) get finished on the first trip.',
+      'If your system is old enough that repairs stop making sense, we size and install a replacement that fits the house. Not a bigger unit than you need.',
+    ]}
+    bullets={['Diagnosis with a price before work', 'Replacement quotes are free', 'Spring tune-ups before the heat']}
+    href="/air-conditioning/"
+    cta="Air Conditioning Services"
+    photo="acCondenser"
+  />
+  <ServiceBlock
+    reverse
+    eyebrow="Heating"
+    heading="Heating & Heat Pump Service"
+    body={[
+      'Cedar City sits near 5,800 feet, and January there is real winter. St. George mornings in December still drop below freezing. We repair gas furnaces and heat pumps, check for carbon monoxide on every heating call, and install new systems when the old one is done.',
+      'Heat pumps in Southern Utah heat in winter and cool in summer, so they rack up hours fast. We know their defrost boards, reversing valves and backup heat strips. See [heat pump service](/heating/heat-pump-repair/).',
+    ]}
+    href="/heating/"
+    cta="Heating Services"
+    photo="furnaceFull"
+  />
+  <ServiceBlock
+    tone="cream"
+    eyebrow="Maintenance plan"
+    heading="Maintenance Plan: Two Visits a Year"
+    body={[
+      'One simple plan. A spring visit for cooling before summer and a fall visit for heating before winter. We schedule both and send the reminders, so you do not have to remember.',
+      'Each visit takes 45 to 60 minutes, heat pumps are covered on both, and there is never a travel fee. If we find something, you get the price first and decide.',
+    ]}
+    href="/maintenance-plan/"
+    cta="See the Maintenance Plan"
+    photo="furnacePlenum"
+  />
+  <ServiceBlock
+    reverse
+    eyebrow="Commercial"
+    heading="Commercial HVAC for Southern Utah Businesses"
+    body={[
+      'Corbin started his career setting equipment on commercial new construction, so rooftop units and multi-zone buildings are familiar ground. We work around business hours, keep tenants comfortable, and set up maintenance agreements that keep equipment off the emergency list.',
+    ]}
+    bullets={['Rooftop package units', 'Offices, retail and shops', 'Multi-unit and tenant spaces']}
+    href="/commercial/"
+    cta="Commercial HVAC"
+    photo="rooftopUnit"
+  />
+  <ServiceBlock
+    tone="cream"
+    eyebrow="Indoor air quality"
+    heading="Cleaner Air Inside, Even With Red Dust Outside"
+    body={[
+      'Fine red dust gets into returns, coils and filters across Washington County. Better filtration, sealed returns and the right humidity in winter make a real difference for allergy sufferers. See our [indoor air quality](/air-conditioning/indoor-air-quality/) options.',
+    ]}
+    href="/air-conditioning/indoor-air-quality/"
+    cta="Indoor Air Quality"
+    photo="filter"
+  />
+  <ServiceBlock
+    reverse
+    eyebrow="Ductless"
+    heading="Ductless Mini Splits"
+    body={[
+      'Garage shops, casitas, additions and that one bedroom over the garage that never cools down. A mini split puts heating and cooling right where you need it without running new ductwork.',
+      'We size them, mount them cleanly and run the line set so it looks like it belongs on the house.',
+    ]}
+    href="/air-conditioning/ductless-mini-splits/"
+    cta="Ductless Mini Splits"
+    photo="miniIndoor"
+  />
+
+  <!-- 9. Why homeowners choose us -->
+  <section class="section bg-teal text-white on-dark">
+    <div class="wrap grid gap-10 lg:grid-cols-[1fr_1.4fr]">
+      <div>
+        <p class="eyebrow">Why homeowners choose us</p>
+        <h2 class="mt-1 text-white">Five Things You Can Count On</h2>
+        <p class="mt-4 text-white/85">No slogans. These are the rules we work by on every call, from a capacitor swap in Santa Clara to a full system change-out in Cedar City.</p>
+      </div>
+      <ol class="divide-y divide-white/15 border-y border-white/15">
+        {why.map((w, i) => (
+          <li class="grid grid-cols-[3.5rem_1fr] gap-2 py-5">
+            <span class="font-display text-4xl font-bold leading-none text-sand">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <h3 class="text-white">{w.t}</h3>
+              <p class="mt-1 text-white/85">{w.d}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 10. Coupons (repeat) -->
+  <section class="section bg-white">
+    <div class="wrap">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <h2>HVAC Coupons &amp; Specials</h2>
+        <a href="/coupons/" class="link">View all coupons</a>
+      </div>
+      <div class="mt-8 grid gap-6 md:grid-cols-3">
+        {coupons.slice(0, 3).map((c) => <CouponCard coupon={c} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. Financing (flagged) -->
+  {FLAGS.SHOW_FINANCING && (
+    <section class="paper section">
+      <div class="wrap">
+        <h2>Financing Available</h2>
+        <p class="mt-3">[CLIENT TO CONFIRM: financing partner, terms and approval language]</p>
+      </div>
+    </section>
+  )}
+
+  <CTABand heading="AC quit? Furnace won't light?" text="Call now. Emergency service is available, and you get a price before any work starts." photo="furnaceGas" />
+
+  <!-- 12. Blog -->
+  <section class="section bg-white">
+    <div class="wrap">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p class="eyebrow">From the blog</p>
+          <h2 class="mt-1">Tips for Southern Utah Homeowners</h2>
+        </div>
+        <a href="/blog/" class="link">All articles</a>
+      </div>
+      <div class="mt-8 grid gap-6 md:grid-cols-3">
+        {posts.map((p) => <PostCard post={p} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- 13. Service areas -->
+  <section class="paper section">
+    <div class="wrap">
+      <ServiceAreaList heading="HVAC Service from St. George to Cedar City" />
+    </div>
+  </section>
+
+  <!-- 14. Reviews -->
+  <section class="section bg-white">
+    <div class="wrap">
+      <p class="eyebrow">Google reviews</p>
+      <ReviewCards heading="What Southern Utah Customers Say" />
+    </div>
+  </section>
+
+  <!-- 15. FAQ -->
+  <section class="paper section">
+    <div class="wrap max-w-4xl">
+      <FAQ faqs={homeFaqs} heading="Common Questions About Utah Heritage HVAC" />
+    </div>
+  </section>
+
+  <!-- 16. Form -->
+  <section class="section bg-white">
+    <div class="wrap grid gap-12 lg:grid-cols-[1.4fr_1fr]">
+      <ContactForm />
+      <aside class="rule-top paper h-fit rounded-md p-6">
+        <h2 class="text-3xl">Rather Call?</h2>
+        <a href={business.phoneHref} class="mt-3 flex items-center gap-2 font-display text-3xl font-bold text-rust-dark no-underline" data-call><Icon name="phone" size={28} />{business.phone}</a>
+        <ul class="mt-5 space-y-2 text-ink-soft">
+          {business.hours.map((h) => <li><strong class="text-ink">{h.days}:</strong> {h.open ? `${h.open} – ${h.close}` : 'Closed'}</li>)}
+          <li>{business.emergencyLine}</li>
+          <li><a href={`mailto:${business.email}`} class="link">{business.email}</a></li>
+        </ul>
+        <ul class="check-list mt-6 space-y-2">
+          {business.proofPoints.map((p) => <li>{p}</li>)}
+        </ul>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>

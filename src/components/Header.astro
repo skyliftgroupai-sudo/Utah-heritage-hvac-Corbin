@@ -1,0 +1,32 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/logo.webp';
+import { business } from '../data/business';
+import TopBar from './TopBar.astro';
+import MegaNav from './MegaNav.astro';
+import MobileNav from './MobileNav.astro';
+import Icon from './Icon.astro';
+---
+<a href="#main" class="sr-only-focusable fixed left-3 top-3 z-[100] rounded-md bg-rust px-4 py-2 font-semibold text-white">Skip to content</a>
+<TopBar />
+<header class="on-dark sticky top-0 z-50 bg-teal text-white shadow-[0_1px_0_rgba(0,0,0,.25)]">
+  <div class="wrap flex items-center justify-between gap-3">
+    <a href="/" class="flex shrink-0 items-center gap-3 py-2 no-underline" aria-label={`${business.name} home`}>
+      <Image src={logo} alt="" width={58} height={58} densities={[1, 2]} loading="eager" class="h-[52px] w-[52px] rounded-md lg:h-[58px] lg:w-[58px]" />
+      <span class="hidden leading-none sm:block lg:hidden">
+        <span class="block font-display text-[1.45rem] font-bold uppercase tracking-wide">Utah Heritage HVAC</span>
+        <span class="mt-1 block font-display text-[0.8rem] font-semibold uppercase tracking-[0.2em] text-sand">of Southern Utah</span>
+      </span>
+    </a>
+    <MegaNav />
+    <a href={business.phoneHref} class="hidden items-center gap-2 font-display text-xl font-bold no-underline hover:text-sand xl:flex" data-call>
+      <Icon name="phone" size={20} class="text-sand" />{business.phone}
+    </a>
+    <div class="flex items-center gap-2 lg:hidden">
+      <a href={business.phoneHref} class="flex h-12 w-12 items-center justify-center rounded-md bg-rust" aria-label={`Call ${business.phone}`} data-call>
+        <Icon name="phone" size={22} />
+      </a>
+      <MobileNav />
+    </div>
+  </div>
+</header>

@@ -1,0 +1,21 @@
+---
+import { coupons as all, type Coupon } from '../data/coupons';
+import CouponCard from './CouponCard.astro';
+interface Props { items?: Coupon[]; heading?: string; eyebrow?: string; limit?: number }
+const { items = all, heading = 'Current Specials', eyebrow = 'Save on your next visit', limit = 4 } = Astro.props;
+const list = items.slice(0, limit);
+---
+<section class="paper section !py-12">
+  <div class="wrap">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="eyebrow">{eyebrow}</p>
+        <h2 class="mt-1">{heading}</h2>
+      </div>
+      <a href="/coupons/" class="link">See all coupons</a>
+    </div>
+    <div class:list={['mt-8 grid gap-6', list.length >= 4 ? 'sm:grid-cols-2 lg:grid-cols-4' : list.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2']}>
+      {list.map((c) => <CouponCard coupon={c} compact />)}
+    </div>
+  </div>
+</section>

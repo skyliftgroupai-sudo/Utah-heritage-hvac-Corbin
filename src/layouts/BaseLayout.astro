@@ -1,0 +1,123 @@
+---
+import '../styles/global.css';
+import { getImage } from 'astro:assets';
+import barlow700 from '@fontsource/barlow-condensed/files/barlow-condensed-latin-700-normal.woff2?url';
+import logo from '../assets/brand/logo.webp';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import StickyMobileBar from '../components/StickyMobileBar.astro';
+import Breadcrumbs, { type Crumb } from '../components/Breadcrumbs.astro';
+import Schema from '../components/Schema.astro';
+import { business, SITE_URL } from '../data/business';
+import { businessNode, personNode, breadcrumbNode, WEBSITE_ID, BUSINESS_ID } from '../lib/schema';
+
+interface Props {
+  title: string;
+  description: string;
+  crumbs?: Crumb[];
+  /** Render breadcrumbs in the layout (default true when crumbs are given). Pages with dark heroes render their own. */
+  showCrumbs?: boolean;
+  schema?: Record<string, unknown>[];
+  noindex?: boolean;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  pageType?: string;
+}
+const { title, description, crumbs, showCrumbs = true, schema = [], noindex = false, ogImage, ogType = 'website', pageType = 'WebPage' } = Astro.props;
+
+const path = Astro.url.pathname;
+const canonical = new URL(path, SITE_URL).href;
+const logoImg = await getImage({ src: logo, width: 252, format: 'png' });
+const logoUrl = new URL(logoImg.src, SITE_URL).href;
+const og = new URL(ogImage ?? '/og-default.jpg', SITE_URL).href;
+const gaId = import.meta.env.PUBLIC_GA4_ID as string | undefined;
+
+const graph = [
+  { '@type': 'WebSite', '@id': WEBSITE_ID, url: `${SITE_URL}/`, name: business.name, publisher: { '@id': BUSINESS_ID }, inLanguage: 'en-US' },
+  {
+    '@type': pageType,
+    '@id': `${canonical}#webpage`,
+    url: canonical,
+    name: title,
+    description,
+    isPartOf: { '@id': WEBSITE_ID },
+    about: { '@id': BUSINESS_ID },
+    inLanguage: 'en-US',
+    ...(crumbs ? { breadcrumb: { '@id': `${canonical}#breadcrumb` } } : {}),
+  },
+  businessNode(logoUrl, og),
+  personNode(),
+  ...(crumbs ? [breadcrumbNode(canonical, crumbs)] : []),
+  ...schema,
+];
+---
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <link rel="preload" href={barlow700} as="font" type="font/woff2" crossorigin />
+    <slot name="head" />
+    <meta name="theme-color" content="#123f3e" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:site_name" content={business.name} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={og} />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={og} />
+    <Schema graph={graph} />
+    {gaId && (
+      <script is:inline define:vars={{ gaId }}>
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { window.dataLayer.push(arguments); };
+        gtag('js', new Date());
+        gtag('config', gaId);
+        // Load gtag.js after the page is idle so it never competes with LCP.
+        var loadGA = function () {
+          if (window.__gaLoaded) return; window.__gaLoaded = true;
+          var s = document.createElement('script'); s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+          document.head.appendChild(s);
+        };
+        addEventListener('load', function () { (window.requestIdleCallback || setTimeout)(loadGA, { timeout: 3500 }); });
+        ['scroll', 'pointerdown', 'keydown'].forEach(function (e) { addEventListener(e, loadGA, { once: true, passive: true }); });
+      </script>
+    )}
+  </head>
+  <body class="flex min-h-screen flex-col">
+    <Header />
+    <main id="main" class="flex-1" tabindex="-1">
+      {crumbs && showCrumbs && (
+        <div class="border-b border-line bg-white">
+          <div class="wrap py-3"><Breadcrumbs items={crumbs} /></div>
+        </div>
+      )}
+      <slot />
+    </main>
+    <Footer />
+    <StickyMobileBar />
+    <script>
+      // click_to_call event for every tel: link (GA4 queues it until gtag.js loads).
+      document.addEventListener('click', (e) => {
+        const a = (e.target as HTMLElement).closest('a[href^="tel:"]');
+        if (a && typeof (window as any).gtag === 'function') {
+          (window as any).gtag('event', 'click_to_call', { link_url: a.getAttribute('href'), page_path: location.pathname });
+        }
+      });
+    </script>
+  </body>
+</html>

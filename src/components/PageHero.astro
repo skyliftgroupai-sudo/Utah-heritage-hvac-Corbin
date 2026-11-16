@@ -1,0 +1,32 @@
+---
+import { Image } from 'astro:assets';
+import { business } from '../data/business';
+import { photos, type PhotoKey, type PhotoNeed } from '../data/photos';
+import Icon from './Icon.astro';
+interface Props { eyebrow?: string; h1: string; sub: string; photo?: PhotoKey | PhotoNeed; ctas?: boolean }
+const { eyebrow, h1, sub, photo = 'furnaceCoil', ctas = true } = Astro.props;
+const img = photo in photos ? photos[photo as PhotoKey] : photos.furnaceCoil;
+---
+<section class="on-dark relative isolate overflow-hidden bg-teal-900 text-white">
+  <Image
+    src={img.src}
+    alt=""
+    widths={[640, 960, 1400]}
+    sizes="100vw"
+    loading="eager"
+    fetchpriority="high"
+    class="absolute inset-0 -z-10 h-full w-full object-cover opacity-30"
+  />
+  <div class="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(11,41,40,.96)_0%,rgba(11,41,40,.85)_55%,rgba(11,41,40,.55)_100%)]"></div>
+  <div class="wrap py-12 lg:py-16">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1 class="mt-2 max-w-4xl text-white">{h1}</h1>
+    <p class="mt-4 max-w-2xl text-lg text-white/90 lg:text-xl">{sub}</p>
+    {ctas && (
+      <div class="mt-7 flex flex-wrap gap-3">
+        <a href="#request" class="btn btn-rust">Request Service</a>
+        <a href={business.phoneHref} class="btn btn-ghost-light" data-call><Icon name="phone" size={20} />Call {business.phone}</a>
+      </div>
+    )}
+  </div>
+</section>

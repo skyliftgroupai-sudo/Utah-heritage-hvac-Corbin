@@ -1,0 +1,22 @@
+---
+import { business } from '../data/business';
+import Icon from './Icon.astro';
+---
+<div class="on-dark hidden bg-teal-900 text-sm text-white/90 md:block">
+  <div class="wrap flex items-center justify-between gap-4 py-1.5">
+    <p class="flex items-center gap-2">
+      <Icon name="map-pin" size={16} class="text-sand" />
+      Serving St. George, Cedar City &amp; all of Southern Utah
+    </p>
+    <div class="flex items-center gap-5">
+      <a href={business.phoneHref} class="flex items-center gap-1.5 font-semibold text-white no-underline hover:text-sand" data-call>
+        <Icon name="phone" size={16} class="text-sand" />{business.phone}
+      </a>
+      <a href={business.gbpReviewsUrl} class="flex items-center gap-1.5 no-underline hover:text-sand" rel="noopener" target="_blank">
+        <Icon name="google" size={16} class="text-sand" />Read our Google reviews
+      </a>
+      <a href="/contact/#request" class="btn btn-rust btn-sm !min-h-[32px] !py-0.5 !text-sm">Request Service</a>
+      <a href={business.phoneHref} class="btn btn-ghost-light btn-sm !min-h-[32px] !py-0.5 !text-sm" data-call>Call Now</a>
+    </div>
+  </div>
+</div>

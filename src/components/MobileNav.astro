@@ -1,0 +1,68 @@
+---
+import { mainNav, companyLinks } from '../data/nav';
+import { business } from '../data/business';
+import Icon from './Icon.astro';
+---
+<button
+  type="button"
+  id="mnav-open"
+  class="flex h-12 items-center gap-2 rounded-md border-2 border-white/70 px-3 font-display text-base font-bold uppercase tracking-wide text-white lg:hidden"
+  aria-expanded="false"
+  aria-controls="mnav"
+>
+  <Icon name="menu" size={22} />Menu
+</button>
+
+<div id="mnav" class="on-dark fixed inset-0 z-[60] hidden flex-col bg-teal text-white lg:hidden" role="dialog" aria-modal="true" aria-label="Site menu">
+  <div class="flex items-center justify-between border-b border-white/15 px-4 py-3">
+    <span class="font-display text-xl font-bold uppercase tracking-wide">Menu</span>
+    <button type="button" id="mnav-close" class="flex h-12 w-12 items-center justify-center rounded-md border-2 border-white/60" aria-label="Close menu">
+      <Icon name="close" size={22} />
+    </button>
+  </div>
+  <nav aria-label="Mobile" class="flex-1 overflow-y-auto px-4 pb-6">
+    <ul>
+      {mainNav.map((item) => item.children ? (
+        <li class="border-b border-white/15">
+          <details class="group">
+            <summary class="flex list-none items-center justify-between py-4 font-display text-xl font-bold uppercase tracking-wide [&::-webkit-details-marker]:hidden">
+              {item.label}
+              <Icon name="caret" size={20} class="text-sand transition-transform group-open:rotate-180" />
+            </summary>
+            <ul class="pb-3 pl-3">
+              <li><a href={item.href} class="block py-2 font-semibold text-sand no-underline">All {item.label}</a></li>
+              {item.children.map((c) => <li><a href={c.href} class="block py-2 text-white/90 no-underline">{c.label}</a></li>)}
+            </ul>
+          </details>
+        </li>
+      ) : (
+        <li class="border-b border-white/15">
+          <a href={item.href} class="block py-4 font-display text-xl font-bold uppercase tracking-wide no-underline">{item.label}</a>
+        </li>
+      ))}
+    </ul>
+    <ul class="mt-5 grid grid-cols-2 gap-x-4 gap-y-1 text-white/85">
+      {companyLinks.slice(0, 6).map((l) => <li><a href={l.href} class="block py-1.5 no-underline">{l.label}</a></li>)}
+    </ul>
+  </nav>
+  <div class="grid grid-cols-2 gap-3 border-t border-white/15 bg-teal-900 p-4">
+    <a href={business.phoneHref} class="btn btn-rust" data-call><Icon name="phone" size={20} />Call Now</a>
+    <a href="/contact/#request" class="btn btn-ghost-light">Request Service</a>
+  </div>
+</div>
+
+<script>
+  const panel = document.getElementById('mnav')!;
+  const openBtn = document.getElementById('mnav-open')!;
+  const closeBtn = document.getElementById('mnav-close')!;
+  const setOpen = (open: boolean) => {
+    panel.classList.toggle('hidden', !open);
+    panel.classList.toggle('flex', open);
+    openBtn.setAttribute('aria-expanded', String(open));
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+    (open ? closeBtn : openBtn).focus();
+  };
+  openBtn.addEventListener('click', () => setOpen(true));
+  closeBtn.addEventListener('click', () => setOpen(false));
+  panel.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+</script>

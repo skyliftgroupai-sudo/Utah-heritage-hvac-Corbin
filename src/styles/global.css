@@ -1,0 +1,123 @@
+@import '@fontsource/barlow-condensed/600.css';
+@import '@fontsource/barlow-condensed/700.css';
+@import '@fontsource/source-sans-3/400.css';
+@import '@fontsource/source-sans-3/600.css';
+@import '@fontsource/source-sans-3/400-italic.css';
+@import 'tailwindcss';
+
+@theme {
+  --color-teal: #123f3e;
+  --color-teal-900: #0b2928;
+  --color-teal-700: #1d5654;
+  --color-teal-100: #dfe9e6;
+  --color-rust: #b5522b;
+  --color-rust-dark: #9a4322;
+  --color-cream: #f5efe3;
+  --color-cream-dark: #ebe2d0;
+  --color-sand: #d9a273;
+  --color-ink: #1c2526;
+  --color-ink-soft: #3d4a4b;
+  --color-line: #d8cdb8;
+
+  --font-display: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif;
+  --font-sans: 'Source Sans 3', 'Segoe UI', Arial, sans-serif;
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 6rem;
+  }
+  body {
+    @apply bg-white font-sans text-ink antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+  @media (min-width: 1024px) {
+    body { font-size: 1.125rem; }
+  }
+  h1, h2, h3, h4 {
+    @apply font-display text-teal;
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: 0.005em;
+    text-wrap: balance;
+  }
+  h1 { font-size: clamp(2.25rem, 5vw, 3.6rem); }
+  h2 { font-size: clamp(1.85rem, 3.4vw, 2.6rem); }
+  h3 { font-size: clamp(1.35rem, 2vw, 1.6rem); font-weight: 600; }
+  a { color: inherit; }
+  :focus-visible {
+    outline: 3px solid var(--color-rust);
+    outline-offset: 2px;
+  }
+  .on-dark :focus-visible { outline-color: var(--color-sand); }
+  img { max-width: 100%; height: auto; }
+  summary { cursor: pointer; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+}
+
+@layer components {
+  .wrap { @apply mx-auto w-full max-w-[1200px] px-4 sm:px-6; }
+  .eyebrow {
+    @apply font-display text-sm font-semibold uppercase tracking-[0.14em] text-rust-dark;
+  }
+  .on-dark .eyebrow { @apply text-sand; }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border-2 px-5 py-3 font-display text-lg font-semibold uppercase tracking-wide no-underline transition-colors;
+    min-height: 48px;
+  }
+  .btn-rust { @apply border-rust bg-rust text-white hover:border-rust-dark hover:bg-rust-dark; }
+  .btn-teal { @apply border-teal bg-teal text-white hover:bg-teal-700; }
+  .btn-outline { @apply border-teal bg-transparent text-teal hover:bg-teal hover:text-white; }
+  .btn-ghost-light { @apply border-white/80 bg-transparent text-white hover:bg-white hover:text-teal; }
+  .btn-sm { @apply px-3 py-1.5 text-base; min-height: 40px; }
+
+  /* Long-form copy */
+  .prose-uh { @apply max-w-[68ch] text-ink-soft; }
+  .prose-uh > * + * { margin-top: 1rem; }
+  .prose-uh h2 { @apply mt-10 mb-3; }
+  .prose-uh h3 { @apply mt-8 mb-2; }
+  .prose-uh a, .link { @apply font-semibold text-rust-dark underline decoration-2 underline-offset-2 hover:text-teal; }
+  .prose-uh ul { @apply list-none space-y-2 pl-0; }
+  .prose-uh ul li { @apply relative pl-6; }
+  .prose-uh ul li::before {
+    content: '';
+    @apply absolute left-0 top-[0.62em] h-2 w-2 bg-rust;
+  }
+  .prose-uh ol { @apply list-decimal space-y-2 pl-6; }
+  .prose-uh strong { @apply text-ink; }
+  .prose-uh table { @apply w-full border-collapse text-left text-base; }
+  .prose-uh th, .prose-uh td { @apply border border-line px-3 py-2 align-top; }
+  .prose-uh th { @apply bg-cream font-semibold text-ink; }
+
+  /* Paper texture for cream sections */
+  .paper {
+    background-color: var(--color-cream);
+    background-image: url('../assets/brand/grain.png');
+  }
+
+  .check-list li { @apply relative pl-8; }
+  .check-list li::before {
+    content: '';
+    @apply absolute left-0 top-[0.3em] h-5 w-5 rounded-sm border-2 border-teal bg-white;
+  }
+  .check-list li::after {
+    content: '';
+    @apply absolute left-[7px] top-[0.42em] h-[11px] w-[6px] rotate-45 border-b-[3px] border-r-[3px] border-rust;
+  }
+
+  .section { @apply py-14 lg:py-20; }
+  .rule-top { @apply border-t-4 border-rust; }
+}
+
+.sr-only-focusable:not(:focus) {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+

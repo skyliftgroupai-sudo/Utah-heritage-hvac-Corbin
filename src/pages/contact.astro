@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactForm from '../components/ContactForm.astro';
+import ServiceAreaList from '../components/ServiceAreaList.astro';
+import Icon from '../components/Icon.astro';
+import { business, SITE_URL } from '../data/business';
+import { BUSINESS_ID } from '../lib/schema';
+
+const contactPage = { '@type': 'ContactPoint', '@id': `${SITE_URL}/contact/#contact`, telephone: business.phoneE164, email: business.email, contactType: 'customer service', areaServed: 'US-UT', availableLanguage: 'English' };
+---
+<BaseLayout
+  title="Contact Utah Heritage HVAC | Schedule Service"
+  description="Contact Utah Heritage HVAC to schedule AC or furnace service in St. George, Cedar City and Southern Utah. Call (801) 661-5412 or send a request online."
+  crumbs={[{ label: 'Contact', href: '/contact/' }]}
+  schema={[contactPage, { '@id': BUSINESS_ID, contactPoint: { '@id': `${SITE_URL}/contact/#contact` } }]}
+  pageType="ContactPage"
+>
+  <section class="paper border-b border-line">
+    <div class="wrap py-12">
+      <p class="eyebrow">Schedule service or ask a question</p>
+      <h1 class="mt-2 max-w-4xl">Contact Utah Heritage HVAC: Southern Utah HVAC Service</h1>
+      <p class="mt-4 max-w-2xl text-lg text-ink-soft">The fastest way to reach us is a phone call. For anything that can wait a few hours, the form works great. We serve St. George, Cedar City and the towns between.</p>
+    </div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="wrap grid gap-12 lg:grid-cols-[1.5fr_1fr]">
+      <ContactForm heading="Request Service" intro="Tell us what is happening and how to reach you. We will call back to schedule and give you a price before any work starts." />
+      <aside class="space-y-6">
+        <div class="rounded-md bg-teal p-6 text-white on-dark">
+          <h2 class="text-3xl text-white">Call or Text</h2>
+          <a href={business.phoneHref} class="mt-3 flex items-center gap-2 font-display text-3xl font-bold text-sand no-underline" data-call><Icon name="phone" size={28} />{business.phone}</a>
+          <p class="mt-2 text-white/85">{business.emergencyLine}.</p>
+          <a href={business.phoneHref} class="btn btn-rust mt-4 w-full" data-call>Call Now</a>
+        </div>
+        <div class="rounded-md border border-line p-6">
+          <h2 class="text-2xl">Email</h2>
+          <a href={`mailto:${business.email}`} class="link mt-2 inline-block break-all">{business.email}</a>
+          <h2 class="mt-6 text-2xl">Hours</h2>
+          <table class="mt-2 w-full text-left">
+            <tbody>
+              {business.hours.map((h) => <tr><th scope="row" class="py-1 pr-4 font-semibold">{h.days}</th><td class="py-1">{h.open ? `${h.open} – ${h.close}` : 'Closed'}</td></tr>)}
+            </tbody>
+          </table>
+          <p class="mt-2 text-sm text-ink-soft">{business.emergencyLine}.</p>
+          <h2 class="mt-6 text-2xl">Where We Work</h2>
+          <p class="mt-2 text-ink-soft">We are a service-area business based in Enterprise, UT. We come to you anywhere in Washington County and Iron County. There is no storefront to visit.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="paper section">
+    <div class="wrap">
+      <ServiceAreaList heading="Service Area" />
+      <details class="mt-10 rounded-md border border-line bg-white">
+        <summary class="px-5 py-4 font-display text-xl font-semibold text-teal">Show the region on Google Maps</summary>
+        <iframe
+          title="Map of Southern Utah: St. George to Cedar City"
+          src="https://www.google.com/maps?q=Washington+County,+Utah&z=8&output=embed"
+          width="100%"
+          height="380"
+          style="border:0"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </details>
+    </div>
+  </section>
+</BaseLayout>

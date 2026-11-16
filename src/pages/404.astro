@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { business } from '../data/business';
+const links = [
+  ['AC Repair', '/air-conditioning/ac-repair/'],
+  ['Furnace Repair', '/heating/furnace-repair/'],
+  ['Maintenance Plan', '/maintenance-plan/'],
+  ['Coupons', '/coupons/'],
+  ['Service Areas', '/service-areas/'],
+  ['Contact', '/contact/'],
+];
+---
+<BaseLayout title="Page Not Found | Utah Heritage HVAC" description="The page you were looking for is not here. Find AC repair, furnace repair and HVAC service across St. George, Cedar City and Southern Utah instead." noindex>
+  <section class="paper section">
+    <div class="wrap max-w-3xl">
+      <p class="font-display text-7xl font-bold text-rust">404</p>
+      <h1 class="mt-2">This Page Went Missing</h1>
+      <p class="mt-4 text-lg text-ink-soft">The page may have moved when we rebuilt the site. Try one of these, or call us and we will help directly.</p>
+      <ul class="mt-6 grid gap-2 sm:grid-cols-2">
+        {links.map(([l, h]) => <li><a href={h} class="flex items-center gap-2 rounded-md border border-line bg-white p-4 font-display text-xl font-semibold text-teal no-underline hover:border-rust"><Icon name="arrow" size={20} class="text-rust" />{l}</a></li>)}
+      </ul>
+      <a href={business.phoneHref} class="btn btn-rust mt-8" data-call><Icon name="phone" size={20} />Call {business.phone}</a>
+    </div>
+  </section>
+</BaseLayout>

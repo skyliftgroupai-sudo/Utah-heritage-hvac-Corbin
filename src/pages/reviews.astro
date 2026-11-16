@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ReviewCards from '../components/ReviewCards.astro';
+import CTABand from '../components/CTABand.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Icon from '../components/Icon.astro';
+import { business } from '../data/business';
+---
+<BaseLayout
+  title="Customer Reviews | Utah Heritage HVAC Southern Utah"
+  description="Read Google reviews from Utah Heritage HVAC customers in Southern Utah about AC service, installations and mini splits. Then call (801) 661-5412."
+  crumbs={[{ label: 'Reviews', href: '/reviews/' }]}
+>
+  <section class="paper border-b border-line">
+    <div class="wrap py-12">
+      <p class="eyebrow">Google reviews</p>
+      <h1 class="mt-2">Utah Heritage HVAC Reviews From Southern Utah Customers</h1>
+      <p class="mt-4 max-w-2xl text-lg text-ink-soft">These are real reviews left on Google by customers. We do not edit them. If we have worked for you, we would be grateful for yours.</p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href={business.gbpReviewsUrl} target="_blank" rel="noopener" class="btn btn-teal"><Icon name="google" size={20} />Read all reviews on Google</a>
+        <a href={business.gbpReviewsUrl} target="_blank" rel="noopener" class="btn btn-outline">Leave a review</a>
+      </div>
+    </div>
+  </section>
+  <section class="section bg-white">
+    <div class="wrap">
+      <ReviewCards limit={20} showLink={false} heading="What Customers Are Saying" />
+      <p class="mt-8 max-w-3xl text-ink-soft">
+        Most of our work is <a href="/air-conditioning/ac-repair/" class="link">AC repair</a>, <a href="/heating/furnace-repair/" class="link">furnace repair</a> and <a href="/air-conditioning/ductless-mini-splits/" class="link">mini split installs</a> across St. George, Cedar City and Washington County. See the <a href="/service-areas/" class="link">full service area</a>.
+      </p>
+    </div>
+  </section>
+  <CTABand />
+  <section class="section bg-white"><div class="wrap max-w-3xl"><ContactForm /></div></section>
+</BaseLayout>

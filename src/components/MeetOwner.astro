@@ -1,0 +1,34 @@
+---
+import Photo from './Photo.astro';
+import { FLAGS } from '../data/business';
+---
+<section class="section bg-white">
+  <div class="wrap grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center">
+    <div class="relative">
+      <Photo name="corbinPortrait" aspect="aspect-[4/5]" />
+      <div class="absolute -bottom-5 left-5 rounded-md bg-teal px-5 py-3 text-white shadow-md">
+        <p class="font-display text-3xl font-bold leading-none">2006</p>
+        <p class="text-sm text-white/85">First day in the trade</p>
+      </div>
+    </div>
+    <div>
+      <p class="eyebrow">Meet the owner</p>
+      <h2 class="mt-1">The Guy Who Answers the Phone Is the Guy Who Shows Up</h2>
+      <div class="prose-uh mt-5">
+        <p>
+          Corbin Allen is a Utah native who has worked in HVAC for about 20 years. He started in 2006 running ductwork and setting equipment on residential and commercial new construction. Then a seasoned service tech took him under his wing and taught him service calls, startups and diagnostics.
+        </p>
+        <p>
+          He worked his way from technician to branch manager to operations manager at a major Southern Utah HVAC company. In 2026 he went out on his own and started Utah Heritage HVAC.
+        </p>
+        <p>
+          The name comes from his dad, who dreamed of running an organic farm down here called Utah Heritage Farms. Corbin carries the idea forward: honest work, clean installs, fair prices and customers he gets to keep for years.
+          {FLAGS.SHOW_FAMILY_NAMES ? ' He lives in Enterprise with his wife Lauren and their sons, Elijah and Nicholas.' : ' He lives in Enterprise with his wife and two boys.'}
+        </p>
+      </div>
+      <p class="mt-6 font-display text-4xl italic text-teal" style="font-family: 'Source Sans 3', serif; font-style: italic; letter-spacing: -0.01em;">— Corbin Allen</p>
+      <p class="text-sm font-semibold uppercase tracking-widest text-ink-soft">Owner, Utah Heritage HVAC</p>
+      <a href="/meet-corbin/" class="btn btn-teal mt-6">Read Corbin's Story</a>
+    </div>
+  </div>
+</section>

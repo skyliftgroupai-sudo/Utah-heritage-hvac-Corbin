@@ -1,0 +1,36 @@
+---
+// Component style guide at /_styleguide/ (noindex, excluded from sitemap). Astro ignores _-prefixed files, so this uses a param.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CouponCard from '../components/CouponCard.astro';
+import CTABand from '../components/CTABand.astro';
+import FAQ from '../components/FAQ.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ReviewCards from '../components/ReviewCards.astro';
+import TrustBar from '../components/TrustBar.astro';
+import MaintenancePromo from '../components/MaintenancePromo.astro';
+import Photo from '../components/Photo.astro';
+import Icon from '../components/Icon.astro';
+import { coupons } from '../data/coupons';
+import { homeFaqs } from '../data/faqs';
+
+export function getStaticPaths() { return [{ params: { sg: '_styleguide' } }]; }
+const colors = [['teal', '#123F3E'], ['teal-700', '#1D5654'], ['rust', '#B5522B'], ['rust-dark', '#9A4322'], ['cream', '#F5EFE3'], ['sand', '#D9A273'], ['ink', '#1C2526']];
+const icons = ['snowflake', 'flame', 'wrench', 'calendar', 'building', 'phone', 'shield', 'map-pin', 'check', 'mail', 'clock', 'tag', 'star', 'arrow', 'home'] as const;
+---
+<BaseLayout title="Style Guide | Utah Heritage HVAC" description="Internal component style guide for the Utah Heritage HVAC website. Not for public use; excluded from search engines and the sitemap of the site." noindex>
+  <div class="wrap space-y-14 py-12">
+    <h1>Style Guide</h1>
+    <section><h2>Colors</h2><div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">{colors.map(([n, h]) => <div class="rounded-md border border-line"><div class="h-16 rounded-t-md" style={`background:${h}`}></div><p class="p-2 text-sm"><strong>{n}</strong><br />{h}</p></div>)}</div></section>
+    <section><h2>Type</h2><p class="eyebrow mt-4">Eyebrow label</p><h3>Heading three</h3><p class="prose-uh">Body copy in Source Sans 3 at 18px with a <a href="/">text link</a>.</p></section>
+    <section><h2>Buttons</h2><div class="mt-4 flex flex-wrap gap-3"><a class="btn btn-rust" href="/">Rust</a><a class="btn btn-teal" href="/">Teal</a><a class="btn btn-outline" href="/">Outline</a><span class="on-dark rounded-md bg-teal p-2"><a class="btn btn-ghost-light" href="/">Ghost</a></span></div></section>
+    <section><h2>Icons</h2><div class="mt-4 flex flex-wrap gap-5 text-teal">{icons.map((i) => <span class="flex flex-col items-center text-xs"><Icon name={i} size={28} />{i}</span>)}</div></section>
+    <section><h2>Breadcrumbs</h2><div class="mt-4"><Breadcrumbs items={[{ label: 'Air Conditioning', href: '/air-conditioning/' }, { label: 'AC Repair', href: '/air-conditioning/ac-repair/' }]} /></div></section>
+    <section><h2>Coupons</h2><div class="mt-4 grid gap-6 md:grid-cols-3">{coupons.slice(0, 3).map((c) => <CouponCard coupon={c} />)}</div></section>
+    <section><h2>Photo placeholder</h2><div class="mt-4 max-w-md"><Photo name="corbinPortrait" /></div></section>
+    <section><MaintenancePromo /></section>
+    <section><ReviewCards limit={2} heading="Reviews" /></section>
+    <section><FAQ faqs={homeFaqs.slice(0, 2)} heading="FAQ" /></section>
+  </div>
+  <TrustBar />
+  <CTABand />
+</BaseLayout>

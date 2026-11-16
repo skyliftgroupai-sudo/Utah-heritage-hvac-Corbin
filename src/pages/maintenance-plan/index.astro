@@ -1,0 +1,183 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import FAQ from '../../components/FAQ.astro';
+import CTABand from '../../components/CTABand.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import ReviewCards from '../../components/ReviewCards.astro';
+import ServiceAreaList from '../../components/ServiceAreaList.astro';
+import Photo from '../../components/Photo.astro';
+import Icon from '../../components/Icon.astro';
+import { byCategory, serviceHref } from '../../data/services';
+import { springChecklist, fallChecklist } from '../../data/services-maintenance';
+import { faqPages } from '../../data/faq-pages';
+import { business, SITE_URL, LAST_UPDATED, formatDate } from '../../data/business';
+import { faqNode, offerCatalogNode, serviceNode } from '../../lib/schema';
+
+const url = `${SITE_URL}/maintenance-plan/`;
+const subs = byCategory('maintenance-plan');
+const planFaqs = faqPages.find((f) => f.category === 'maintenance-plan')!.groups[0]!.faqs;
+const benefits = [
+  { t: 'Catch problems early', d: 'A capacitor reading low in April or a flame sensor fouling in September is a small fix. The same part failing in July or January is a breakdown.' },
+  { t: 'Lower energy bills', d: 'Clean coils, a correct refrigerant charge and good airflow mean the system reaches temperature faster and runs less.' },
+  { t: 'Extend system life', d: 'With regular maintenance, most systems last 15–20 years. Without it, Southern Utah heat and dust shorten that fast.' },
+  { t: 'Beat peak-season delays', d: 'Your visits are booked before the summer and winter rushes, when every HVAC schedule in the region fills up.' },
+];
+const rows = Math.max(springChecklist.length, fallChecklist.length);
+---
+<BaseLayout
+  title="HVAC Maintenance Plan in St. George & Cedar City"
+  description="One simple HVAC maintenance plan for St. George and Cedar City homes: spring AC and fall heating visits, same tech, no travel fees. Call (801) 661-5412."
+  crumbs={[{ label: 'Maintenance Plan', href: '/maintenance-plan/' }]}
+  schema={[
+    serviceNode(url, { name: 'HVAC Maintenance Plan', serviceType: 'HVAC preventive maintenance plan', description: 'Two HVAC maintenance visits a year in Southern Utah: a spring AC visit and a fall heating visit, performed by the same technician who handles repairs.', audience: 'residential' }),
+    offerCatalogNode(url, 'HVAC Maintenance Plan Visits', subs.map((s) => ({ name: s.name, href: serviceHref(s) }))),
+    faqNode(url, planFaqs),
+  ]}
+>
+  <PageHero eyebrow="Keep Your System Running Before It Breaks Down" h1="HVAC Maintenance Plan in St. George & Cedar City" sub="One simple plan. Two visits a year, one before summer and one before winter. We schedule both and send the reminders." photo="furnacePlenum" />
+
+  <section class="section bg-white">
+    <div class="wrap grid gap-10 lg:grid-cols-[1.3fr_1fr]">
+      <div>
+        <div class="rule-top paper rounded-md p-6">
+          <p class="eyebrow">Quick answer</p>
+          <p class="mt-2 text-lg leading-relaxed">
+            The Utah Heritage HVAC maintenance plan includes two visits a year: a spring AC visit and a fall heating visit, each 45 to 60 minutes, done by the same technician who handles repairs. Heat pumps are covered on both. There are no travel fees, and price depends on your system type and size.
+          </p>
+        </div>
+        <div class="prose-uh mt-8">
+          <h2 class="!mt-0">One Simple Plan. No Tiers.</h2>
+          <p>
+            There is no bronze, silver or gold here, and no list of add-ons to sort through. Every member gets the same two visits, done the same thorough way. Price depends only on what kind of system you have and how big it is, so we quote it after a quick conversation. <strong>Call for your quote at {business.phone}.</strong>
+          </p>
+          <p>
+            We schedule both visits and send you reminders. The person who comes out is the same technician who would handle a repair, so he already knows your equipment and its history. Each visit takes 45 to 60 minutes. Heat pumps are covered in both visits, since they work all year.
+          </p>
+          <p>
+            If we find a problem, we explain it and give you upfront pricing first. You decide whether to fix it that day, schedule it later, or keep an eye on it. That is the whole point: no surprises, in either direction. Read more on <a href="/blog/how-often-should-you-service-your-hvac-in-st-george-or-cedar-city/">how often to service HVAC in Southern Utah</a>.
+          </p>
+        </div>
+      </div>
+      <aside class="h-fit rounded-md border-2 border-teal p-6">
+        <h2 class="text-3xl">Plan at a Glance</h2>
+        <table class="mt-4 w-full text-left text-[1rem]">
+          <tbody class="divide-y divide-line">
+            <tr><th scope="row" class="py-2 pr-3 font-semibold">Visits per year</th><td class="py-2">2 (spring + fall)</td></tr>
+            <tr><th scope="row" class="py-2 pr-3 font-semibold">Visit length</th><td class="py-2">45–60 minutes</td></tr>
+            <tr><th scope="row" class="py-2 pr-3 font-semibold">Technician</th><td class="py-2">Same tech who does repairs</td></tr>
+            <tr><th scope="row" class="py-2 pr-3 font-semibold">Heat pumps</th><td class="py-2">Covered both visits</td></tr>
+            <tr><th scope="row" class="py-2 pr-3 font-semibold">Travel fees</th><td class="py-2">None</td></tr>
+            <tr><th scope="row" class="py-2 pr-3 font-semibold">Scheduling</th><td class="py-2">We book it and remind you</td></tr>
+            <tr><th scope="row" class="py-2 pr-3 font-semibold">Price</th><td class="py-2">By system type and size. <span class="text-ink-soft">[CLIENT: confirm if a price can be shown]</span></td></tr>
+          </tbody>
+        </table>
+        <a href={business.phoneHref} class="btn btn-rust mt-5 w-full" data-call><Icon name="phone" size={20} />Call for Your Quote</a>
+      </aside>
+    </div>
+  </section>
+
+  <!-- What's included table -->
+  <section class="paper section">
+    <div class="wrap">
+      <p class="eyebrow">What's included</p>
+      <h2 class="mt-1">What Each Maintenance Visit Covers</h2>
+      <p class="mt-3 max-w-3xl text-ink-soft">Two visits, fourteen checks. The spring visit gets your cooling ready for St. George summer. The fall visit gets your heat ready for Cedar City winter.</p>
+      <div class="mt-8 overflow-x-auto rounded-md border border-line bg-white">
+        <table class="w-full min-w-[560px] border-collapse text-left">
+          <caption class="sr-only-focusable">Spring and fall maintenance visit checklists</caption>
+          <thead>
+            <tr class="bg-teal text-white">
+              <th scope="col" class="w-1/2 px-5 py-4 font-display text-xl uppercase tracking-wide"><span class="flex items-center gap-2"><Icon name="snowflake" size={22} class="text-sand" />Spring Visit (AC)</span></th>
+              <th scope="col" class="w-1/2 border-l border-white/20 px-5 py-4 font-display text-xl uppercase tracking-wide"><span class="flex items-center gap-2"><Icon name="flame" size={22} class="text-sand" />Fall Visit (Heating)</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {Array.from({ length: rows }).map((_, i) => (
+              <tr class="border-t border-line even:bg-cream/50">
+                <td class="px-5 py-3"><span class="flex items-start gap-2"><Icon name="check" size={20} class="mt-0.5 shrink-0 text-rust" />{springChecklist[i]}</span></td>
+                <td class="border-l border-line px-5 py-3"><span class="flex items-start gap-2"><Icon name="check" size={20} class="mt-0.5 shrink-0 text-rust" />{fallChecklist[i]}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-6 flex flex-wrap gap-4">
+        <a href="/maintenance-plan/spring-ac-tune-up/" class="link">More on the spring AC visit</a>
+        <a href="/maintenance-plan/fall-heating-tune-up/" class="link">More on the fall heating visit</a>
+        <a href="/maintenance-plan/heat-pump-maintenance/" class="link">Heat pump maintenance</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits -->
+  <section class="section bg-white">
+    <div class="wrap grid gap-10 lg:grid-cols-[1fr_1.3fr] lg:items-center">
+      <Photo name="furnaceVent" />
+      <div>
+        <h2>Why Southern Utah Homes Need Two Visits a Year</h2>
+        <p class="mt-3 text-ink-soft">St. George air conditioners run five months or more above 90 degrees, and Cedar City furnaces carry real winters at nearly 5,800 feet. Once a year is not enough here.</p>
+        <ol class="mt-6 space-y-5">
+          {benefits.map((b, i) => (
+            <li class="grid grid-cols-[3rem_1fr] gap-2">
+              <span class="font-display text-4xl font-bold leading-none text-rust">{String(i + 1).padStart(2, '0')}</span>
+              <div><h3>{b.t}</h3><p class="mt-1 text-ink-soft">{b.d}</p></div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="paper section">
+    <div class="wrap">
+      <h2>Maintenance Plan Services</h2>
+      <ul class="mt-8 grid gap-4 sm:grid-cols-2">
+        {subs.map((s) => (
+          <li>
+            <a href={serviceHref(s)} class="group flex h-full items-start justify-between gap-4 rounded-md border border-line bg-white p-5 no-underline">
+              <span>
+                <span class="block font-display text-[1.4rem] font-bold text-teal group-hover:text-rust-dark">{s.name}</span>
+                <span class="mt-1 block text-ink-soft">{s.short}</span>
+              </span>
+              <Icon name="arrow" size={22} class="mt-1 shrink-0 text-rust" />
+            </a>
+          </li>
+        ))}
+        <li>
+          <a href="/commercial/maintenance-plans/" class="group flex h-full items-start justify-between gap-4 rounded-md border border-line bg-white p-5 no-underline">
+            <span>
+              <span class="block font-display text-[1.4rem] font-bold text-teal group-hover:text-rust-dark">Commercial Maintenance Plans</span>
+              <span class="mt-1 block text-ink-soft">Scheduled service agreements for rooftop units and business systems.</span>
+            </span>
+            <Icon name="arrow" size={22} class="mt-1 shrink-0 text-rust" />
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="wrap"><ReviewCards limit={3} heading="What Our Customers Say" /></div>
+  </section>
+
+  <CTABand heading="Get on the schedule before the next season." text="Call for your plan quote. We book both visits and send the reminders." photo="furnacePlenum" />
+
+  <section class="section bg-white">
+    <div class="wrap max-w-4xl">
+      <FAQ faqs={planFaqs} heading="HVAC Maintenance Plan FAQs" />
+      <p class="mt-6"><a href="/maintenance-plan/faqs/" class="link">More maintenance plan questions</a></p>
+    </div>
+  </section>
+
+  <section class="paper section">
+    <div class="wrap"><ServiceAreaList heading="Maintenance Plan Service Areas" intro="The plan is available everywhere we work in Washington County and Iron County. No travel fees for either visit." /></div>
+  </section>
+
+  <section class="section bg-white">
+    <div class="wrap grid gap-10 lg:grid-cols-[1.5fr_1fr]">
+      <ContactForm heading="Ask About the Maintenance Plan" defaultService="Maintenance plan" />
+      <p class="text-sm text-ink-soft lg:self-end">Last updated: <time datetime={LAST_UPDATED}>{formatDate(LAST_UPDATED)}</time></p>
+    </div>
+  </section>
+</BaseLayout>

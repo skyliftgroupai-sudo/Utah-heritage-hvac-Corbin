@@ -1,0 +1,34 @@
+---
+import { Image } from 'astro:assets';
+import { photos, photoNeeds, type PhotoKey, type PhotoNeed } from '../data/photos';
+interface Props {
+  name: PhotoKey | PhotoNeed;
+  alt?: string;
+  class?: string;
+  sizes?: string;
+  widths?: number[];
+  priority?: boolean;
+  aspect?: string;
+}
+const { name, alt, class: cls = '', sizes = '(min-width: 1024px) 50vw, 100vw', widths = [480, 768, 1024, 1400], priority = false, aspect = 'aspect-[4/3]' } = Astro.props;
+const real = name in photos ? photos[name as PhotoKey] : null;
+---
+{real ? (
+  <Image
+    src={real.src}
+    alt={alt ?? real.alt}
+    widths={widths.filter((w) => w <= real.src.width)}
+    sizes={sizes}
+    class:list={['block w-full rounded-md object-cover', aspect, cls]}
+    loading={priority ? 'eager' : 'lazy'}
+    fetchpriority={priority ? 'high' : 'auto'}
+  />
+) : (
+  <div
+    role="img"
+    aria-label={photoNeeds[name as PhotoNeed]}
+    class:list={['flex w-full items-center justify-center rounded-md border-2 border-dashed border-[#9aa3a3] bg-[#d9dcdc] p-6 text-center font-display text-lg font-semibold uppercase tracking-wide text-[#3d4a4b]', aspect, cls]}
+  >
+    {photoNeeds[name as PhotoNeed]}
+  </div>
+)}

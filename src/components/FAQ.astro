@@ -1,0 +1,23 @@
+---
+import type { FAQ as F } from '../data/types';
+import { md } from '../lib/md';
+interface Props { faqs: F[]; heading?: string; id?: string; headingLevel?: 'h2' | 'h3'; intro?: string }
+const { faqs, heading = 'Frequently Asked Questions', id = 'faq', headingLevel = 'h2', intro } = Astro.props;
+const H = headingLevel;
+---
+<div id={id}>
+  {heading && <H>{heading}</H>}
+  {intro && <p class="mt-3 max-w-3xl text-ink-soft">{intro}</p>}
+  <div class="mt-6 divide-y divide-line border-y border-line">
+    {faqs.map((f, i) => (
+      <details class="group" open={i === 0}>
+        <summary class="flex list-none items-start justify-between gap-4 py-4 [&::-webkit-details-marker]:hidden">
+          <span class="font-display text-xl font-semibold leading-snug text-teal">{f.q}</span>
+          <span aria-hidden="true" class="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-sm border-2 border-rust font-bold leading-none text-rust-dark group-open:hidden">+</span>
+          <span aria-hidden="true" class="mt-1 hidden h-6 w-6 shrink-0 items-center justify-center rounded-sm border-2 border-rust bg-rust font-bold leading-none text-white group-open:flex">–</span>
+        </summary>
+        <div class="prose-uh pb-5" set:html={`<p>${md(f.a)}</p>`} />
+      </details>
+    ))}
+  </div>
+</div>

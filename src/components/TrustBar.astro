@@ -1,0 +1,31 @@
+---
+import { business } from '../data/business';
+import Icon, { type IconName } from './Icon.astro';
+const items: { icon: IconName; label: string; sub: string }[] = [
+  { icon: 'shield', label: 'Licensed & Insured', sub: business.licenseNumber ? `License #${business.licenseNumber}` : 'Utah licensed contractor' },
+  { icon: 'home', label: 'Not a Franchise', sub: '100% locally owned' },
+  { icon: 'wrench', label: '20+ Years Experience', sub: 'In the trade since 2006' },
+  { icon: 'tag', label: 'Upfront Pricing', sub: 'Price before any work' },
+  { icon: 'map-pin', label: 'No Travel Fees', sub: 'Anywhere we serve' },
+];
+---
+<section aria-label="Why customers trust us" class="border-y-4 border-teal bg-white">
+  <div class="wrap grid grid-cols-2 divide-line sm:grid-cols-3 lg:grid-cols-6 lg:divide-x">
+    {items.map((it) => (
+      <div class="flex items-center gap-3 px-3 py-5">
+        <Icon name={it.icon} size={30} class="shrink-0 text-rust" />
+        <div class="leading-tight">
+          <p class="font-display text-[1.1rem] font-bold uppercase text-teal">{it.label}</p>
+          <p class="text-sm text-ink-soft">{it.sub}</p>
+        </div>
+      </div>
+    ))}
+    <a href={business.gbpReviewsUrl} target="_blank" rel="noopener" class="group flex items-center gap-3 px-3 py-5 no-underline">
+      <Icon name="google" size={30} class="shrink-0 text-rust" />
+      <div class="leading-tight">
+        <p class="font-display text-[1.1rem] font-bold uppercase text-teal group-hover:text-rust-dark">Google Reviews</p>
+        <p class="text-sm text-ink-soft underline">Read what neighbors say</p>
+      </div>
+    </a>
+  </div>
+</section>

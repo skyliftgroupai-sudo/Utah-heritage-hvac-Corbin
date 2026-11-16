@@ -1,0 +1,192 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "astro",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "trailingSlash": true,
+  "cleanUrls": false,
+  "redirects": [
+    {
+      "source": "/ac-repair-in-southern-utah/",
+      "destination": "/air-conditioning/ac-repair/",
+      "permanent": true
+    },
+    {
+      "source": "/heating-and-furnace-repair-in-southern-utah/",
+      "destination": "/heating/furnace-repair/",
+      "permanent": true
+    },
+    {
+      "source": "/new-install/",
+      "destination": "/air-conditioning/ac-installation/",
+      "permanent": true
+    },
+    {
+      "source": "/emergency-services/",
+      "destination": "/air-conditioning/emergency-ac-repair/",
+      "permanent": true
+    },
+    {
+      "source": "/hvac-service-areas-st-george-to-cedar-city-ut/",
+      "destination": "/service-areas/",
+      "permanent": true
+    },
+    {
+      "source": "/hvac-service-areas-st-george-to-cedar-city-ut/ac-repair-st-george-ut-same-day-hvac-service/",
+      "destination": "/service-areas/st-george/",
+      "permanent": true
+    },
+    {
+      "source": "/hvac-service-areas-st-george-to-cedar-city-ut/hvac-repair-washington-ut-ac-service-replacement/",
+      "destination": "/service-areas/washington/",
+      "permanent": true
+    },
+    {
+      "source": "/hvac-service-areas-st-george-to-cedar-city-ut/furnace-ac-repair-cedar-city-ut-same-day-service/",
+      "destination": "/service-areas/cedar-city/",
+      "permanent": true
+    },
+    {
+      "source": "/hvac-service-areas-st-george-to-cedar-city-ut/hvac-service-enterprise-ut-local-company-based-in-town/",
+      "destination": "/service-areas/enterprise/",
+      "permanent": true
+    },
+    {
+      "source": "/hvac-service-areas-st-george-to-cedar-city-ut/hvac-repair-in-santa-clara-utah/",
+      "destination": "/service-areas/santa-clara/",
+      "permanent": true
+    },
+    {
+      "source": "/hvac-service-areas-st-george-to-cedar-city-ut/hvac-repair-in-ivins-utah/",
+      "destination": "/service-areas/ivins/",
+      "permanent": true
+    },
+    {
+      "source": "/hvac-service-areas-st-george-to-cedar-city-ut/hvac-service-in-veyo-utah/",
+      "destination": "/service-areas/",
+      "permanent": true
+    },
+    {
+      "source": "/hvac-service-areas-st-george-to-cedar-city-ut/hvac-repair-in-veyo-utah/",
+      "destination": "/service-areas/",
+      "permanent": true
+    },
+    {
+      "source": "/hvac-service-areas-st-george-to-cedar-city-ut/hvac-repair-in-la-verkin-utah/",
+      "destination": "/service-areas/",
+      "permanent": true
+    },
+    {
+      "source": "/hvac-service-areas-st-george-to-cedar-city-ut/hvac-repair-in-toquerville-utah/",
+      "destination": "/service-areas/",
+      "permanent": true
+    },
+    {
+      "source": "/ac-repair-vs-replacement-how-to-know-which-one-you-actually-need/",
+      "destination": "/blog/ac-repair-vs-replacement-how-to-know-which-one-you-actually-need/",
+      "permanent": true
+    },
+    {
+      "source": "/why-southern-utah-is-so-hard-on-hvac-systems-and-what-to-do-about-it/",
+      "destination": "/blog/why-southern-utah-is-so-hard-on-hvac-systems-and-what-to-do-about-it/",
+      "permanent": true
+    },
+    {
+      "source": "/how-often-should-you-service-your-hvac-in-st-george-or-cedar-city/",
+      "destination": "/blog/how-often-should-you-service-your-hvac-in-st-george-or-cedar-city/",
+      "permanent": true
+    },
+    {
+      "source": "/category/service/",
+      "destination": "/blog/",
+      "permanent": true
+    },
+    {
+      "source": "/category/maintenance/",
+      "destination": "/blog/",
+      "permanent": true
+    },
+    {
+      "source": "/category/repair/",
+      "destination": "/blog/",
+      "permanent": true
+    },
+    {
+      "source": "/category/:slug/",
+      "destination": "/blog/",
+      "permanent": true
+    },
+    {
+      "source": "/author/:slug/",
+      "destination": "/meet-corbin/",
+      "permanent": true
+    },
+    {
+      "source": "/feed/",
+      "destination": "/blog/",
+      "permanent": true
+    },
+    {
+      "source": "/wp-sitemap.xml",
+      "destination": "/sitemap-index.xml",
+      "permanent": true
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/sitemap-index.xml",
+      "permanent": true
+    },
+    {
+      "source": "/wp-sitemap-:part.xml",
+      "destination": "/sitemap-index.xml",
+      "permanent": true
+    },
+    {
+      "source": "/services/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/home/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/about/",
+      "destination": "/meet-corbin/",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/_astro/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    }
+  ]
+}
