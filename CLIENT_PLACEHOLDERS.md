@@ -27,14 +27,13 @@ No dollar amounts were invented. Fine print is generic and should be checked.
 ## Photos — `src/data/photos.ts` (rendered as labeled gray boxes until supplied)
 | Line | Needed shot | Used on |
 |---|---|---|
-| 29 | Corbin portrait at a job site | Homepage owner section, Meet Corbin, blog author box |
-| 30 | Corbin explaining a repair to a homeowner | Every service page "Why choose us", Meet Corbin |
-| 31 | Commercial rooftop unit service | Homepage commercial block, all commercial pages |
-| 32 | Thermostat or zoning control panel | Efficiency Audit |
-| 33 | Dirty vs. clean air filter | Indoor Air Quality pages, homepage IAQ block |
-| 34 | Company truck or van | (spare) |
+| 31 | Corbin explaining a repair to a homeowner | Every service page "Why choose us", Meet Corbin |
+| 32 | Commercial rooftop unit service | Homepage commercial block, all commercial pages |
+| 33 | Thermostat or zoning control panel | Efficiency Audit |
+| 34 | Dirty vs. clean air filter | Indoor Air Quality pages, homepage IAQ block |
+| 35 | Company truck or van | (spare) |
 
-Real photos already in use: AC condenser install, five furnace/coil install shots, mini split indoor + outdoor (from client files in Downloads).
+Real photos already in use: Corbin portrait (homepage owner section, Meet Corbin, blog author box), AC condenser install, five furnace/coil install shots, mini split indoor + outdoor (from client files in Downloads).
 
 **Logo:** `src/assets/brand/logo.webp` is cropped from a client photo watermark (252 px). Replace with the original logo file (SVG or a large PNG) for a sharper header, favicons and OG image, then run `node scripts/make-icons.mjs`.
 

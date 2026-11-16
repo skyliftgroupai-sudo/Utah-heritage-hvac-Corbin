@@ -7,8 +7,9 @@ import furnaceVent from '../assets/photos/furnace-venting.jpg';
 import furnacePlenum from '../assets/photos/furnace-plenum.jpg';
 import miniOutdoor from '../assets/photos/mini-split-outdoor.jpg';
 import miniIndoor from '../assets/photos/mini-split-indoor.jpg';
+import corbinPortrait from '../assets/photos/corbin-allen-portrait.webp';
 
-export interface Photo { src: ImageMetadata; alt: string }
+export interface Photo { src: ImageMetadata; alt: string; /** CSS object-position for cropped frames */ pos?: string }
 
 /** Real job photos supplied by the client. */
 export const photos = {
@@ -20,13 +21,13 @@ export const photos = {
   furnacePlenum: { src: furnacePlenum, alt: 'Sheet metal supply plenum and line set on a furnace and AC coil replacement' },
   miniOutdoor: { src: miniOutdoor, alt: 'Ductless mini split outdoor unit mounted beside a home with a covered line set' },
   miniIndoor: { src: miniIndoor, alt: 'Ductless mini split wall unit installed above a kitchen window' },
+  corbinPortrait: { src: corbinPortrait, alt: 'Corbin Allen, owner of Utah Heritage HVAC, smiling outdoors in Southern Utah', pos: 'center 18%' },
 } satisfies Record<string, Photo>;
 
 export type PhotoKey = keyof typeof photos;
 
 /** Shots we still need from the client. Rendered as labeled gray boxes until supplied. */
 export const photoNeeds = {
-  corbinPortrait: '[PHOTO: Corbin Allen portrait at a job site]',
   corbinWorking: '[PHOTO: Corbin explaining a repair to a homeowner]',
   rooftopUnit: '[PHOTO: commercial rooftop unit service in St. George]',
   thermostat: '[PHOTO: thermostat or zoning control panel]',

@@ -26,7 +26,7 @@ const icons = ['snowflake', 'flame', 'wrench', 'calendar', 'building', 'phone', 
     <section><h2>Icons</h2><div class="mt-4 flex flex-wrap gap-5 text-teal">{icons.map((i) => <span class="flex flex-col items-center text-xs"><Icon name={i} size={28} />{i}</span>)}</div></section>
     <section><h2>Breadcrumbs</h2><div class="mt-4"><Breadcrumbs items={[{ label: 'Air Conditioning', href: '/air-conditioning/' }, { label: 'AC Repair', href: '/air-conditioning/ac-repair/' }]} /></div></section>
     <section><h2>Coupons</h2><div class="mt-4 grid gap-6 md:grid-cols-3">{coupons.slice(0, 3).map((c) => <CouponCard coupon={c} />)}</div></section>
-    <section><h2>Photo placeholder</h2><div class="mt-4 max-w-md"><Photo name="corbinPortrait" /></div></section>
+    <section><h2>Photo placeholder</h2><div class="mt-4 max-w-md"><Photo name="corbinWorking" /></div></section>
     <section><MaintenancePromo /></section>
     <section><ReviewCards limit={2} heading="Reviews" /></section>
     <section><FAQ faqs={homeFaqs.slice(0, 2)} heading="FAQ" /></section>
