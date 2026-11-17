@@ -50,11 +50,13 @@ export const business = {
     facebook: '',
     /** [CLIENT TO PROVIDE: Instagram profile URL] */
     instagram: '',
-    /** [CLIENT TO PROVIDE: Google Business Profile URL] */
-    gbp: '',
+    /** Google Business Profile (Maps place link, CID from the share link the client sent). */
+    gbp: 'https://www.google.com/maps?cid=15005902072726020070',
   },
-  /** [CLIENT TO PROVIDE: direct "read reviews" link from Google Business Profile]. Falls back to a Maps search. */
-  gbpReviewsUrl: 'https://www.google.com/maps/search/Utah+Heritage+HVAC',
+  /** Opens the Google Business Profile, where the reviews live. */
+  gbpReviewsUrl: 'https://share.google/O4URQ4CrhoDzj3ejs',
+  /** Exact name on the Google Business Profile. Map embeds search this so Google shows the business card. */
+  gbpName: 'Utah Heritage HVAC of Southern Utah LLC',
   counties: ['Washington County', 'Iron County'],
 } as const;
 

@@ -2,6 +2,7 @@
 import { cityList, cityHref } from '../data/areas-list';
 import Icon from './Icon.astro';
 import GoogleMap from './GoogleMap.astro';
+import { business } from '../data/business';
 interface Props { heading?: string; intro?: string; showMap?: boolean; headingLevel?: 'h2' | 'h3'; service?: string }
 const {
   heading = 'Areas We Serve',
@@ -31,11 +32,13 @@ const H = headingLevel;
   </div>
   {showMap && (
     <GoogleMap
-      query="Washington County, Utah"
+      query={business.gbpName}
       zoom={8}
       height={400}
-      title="Google map of the Utah Heritage HVAC service area in Washington County and Iron County, Utah"
-      caption="Washington County and Iron County, UT. We come to you."
+      openUrl={business.social.gbp}
+      openLabel="View on Google"
+      title={`Google Maps listing for ${business.name}, serving Washington County and Iron County, Utah`}
+      caption={`${business.name} · St. George to Cedar City`}
     />
   )}
 </div>

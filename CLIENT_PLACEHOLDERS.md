@@ -9,8 +9,6 @@ Everything below needs a real value from the client before launch. Most live in 
 | 46 | Utah contractor license # | Empty (optional). Shows in footer/trust bar/schema once filled. |
 | 49 | Facebook URL | Empty — icon hidden until set. |
 | 51 | Instagram URL | Empty — icon hidden until set. |
-| 53 | Google Business Profile URL | Empty — added to schema `sameAs` once set. |
-| 56 | GBP "read reviews" link | Falls back to a Google Maps search for the business name. Replace with the direct review link. |
 | 6–9 | Flags | `SHOW_FAMILY_NAMES` (Lauren, Elijah, Nicholas) and `SHOW_FINANCING` are both `false` until confirmed. |
 
 ## Coupons — `src/data/coupons.ts`
