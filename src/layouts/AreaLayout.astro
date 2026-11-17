@@ -13,6 +13,7 @@ import { areas } from '../data/areas';
 import { coupons } from '../data/coupons';
 import { SITE_URL, LAST_UPDATED, formatDate, business } from '../data/business';
 import { md } from '../lib/md';
+import GoogleMap from '../components/GoogleMap.astro';
 import { areaExtra } from '../data/extra-copy';
 import { faqNode, BUSINESS_ID } from '../lib/schema';
 import type { Area } from '../data/types';
@@ -78,10 +79,21 @@ const serviceArea = {
   </section>
 
   <section class="section bg-white">
-    <div class="wrap">
-      <h2>{a.homesHeading}</h2>
-      <div class="prose-uh mt-5 max-w-3xl">{a.homes.map((p) => <p set:html={md(p)} />)}</div>
-      {more && (<><h2 class="mt-12">{more.heading}</h2><div class="prose-uh mt-5 max-w-3xl">{more.body.map((p) => <p set:html={md(p)} />)}</div></>)}
+    <div class="wrap grid gap-10 lg:grid-cols-[1.3fr_1fr]">
+      <div>
+        <h2>{a.homesHeading}</h2>
+        <div class="prose-uh mt-5 max-w-3xl">{a.homes.map((p) => <p set:html={md(p)} />)}</div>
+        {more && (<><h2 class="mt-12">{more.heading}</h2><div class="prose-uh mt-5 max-w-3xl">{more.body.map((p) => <p set:html={md(p)} />)}</div></>)}
+      </div>
+      <div class="lg:sticky lg:top-28 lg:self-start">
+        <GoogleMap
+          query={`${a.name}, UT`}
+          zoom={12}
+          height={420}
+          title={`Google map of ${a.name}, Utah, served by Utah Heritage HVAC`}
+          caption={`Serving all of ${a.name}, UT. No travel fees.`}
+        />
+      </div>
     </div>
   </section>
 

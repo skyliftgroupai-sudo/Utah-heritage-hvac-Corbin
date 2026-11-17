@@ -1,0 +1,44 @@
+---
+// Real Google Maps embed (no API key needed). The iframe only loads once it scrolls near view,
+// so Google's ~450KB of map scripts never compete with the page's first load.
+import Icon from './Icon.astro';
+interface Props { query: string; zoom?: number; title: string; height?: number; class?: string; caption?: string }
+const { query, zoom = 10, title, height = 380, class: cls = '', caption } = Astro.props;
+const q = encodeURIComponent(query);
+const src = `https://www.google.com/maps?q=${q}&z=${zoom}&output=embed`;
+const open = `https://www.google.com/maps/search/?api=1&query=${q}`;
+---
+<figure class:list={['overflow-hidden rounded-md border border-line bg-white', cls]}>
+  <div class="paper relative" style={`height:${height}px`}>
+    <span class="absolute inset-0 flex items-center justify-center gap-2 text-ink-soft" aria-hidden="true">
+      <Icon name="map-pin" size={20} class="text-rust" />Loading map…
+    </span>
+    <iframe
+      title={title}
+      data-map-src={src}
+      width="100%"
+      height={height}
+      class="relative block w-full"
+      style={`border:0;height:${height}px`}
+      referrerpolicy="no-referrer-when-downgrade"
+      allowfullscreen
+    ></iframe>
+  </div>
+  <figcaption class="flex flex-wrap items-center justify-between gap-2 border-t border-line px-4 py-3 text-[0.95rem] text-ink-soft">
+    <span>{caption ?? 'We come to you. There is no storefront.'}</span>
+    <a href={open} target="_blank" rel="noopener" class="link inline-flex items-center gap-1"><Icon name="map-pin" size={16} />Open in Google Maps</a>
+  </figcaption>
+</figure>
+
+<script>
+  const frames = document.querySelectorAll<HTMLIFrameElement>('iframe[data-map-src]');
+  const load = (f: HTMLIFrameElement) => { if (!f.src) f.src = f.dataset.mapSrc!; };
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { load(e.target as HTMLIFrameElement); io.unobserve(e.target); } });
+    }, { rootMargin: '200px 0px' });
+    frames.forEach((f) => io.observe(f));
+  } else {
+    frames.forEach(load);
+  }
+</script>
